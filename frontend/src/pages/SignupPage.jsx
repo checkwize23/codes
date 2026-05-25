@@ -113,7 +113,7 @@ const SignupPage = () => {
     <div className="w-full mx-auto px-4 py-8 md:py-12 bg-gradient-to-t from-cyan-50 to-cyan-900 min-h-screen relative">
       {loading && <LoadingOverlay />}
       <div className='mb-8'>
-        <img src="./hire_logo.png" alt="hero logo" className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-4" />
+        <img src="./checkwize_logo.png" alt="hero logo" className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-4" />
         <h1 className="text-2xl md:text-3xl font-bold text-center mb-2 text-white drop-shadow-lg">{t('joinUs')}</h1>
         <p className="text-cyan-100 text-center text-sm md:text-base">{t('createAccountStarted')}</p>
       </div>

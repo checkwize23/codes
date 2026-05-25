@@ -10,7 +10,7 @@ const Footer = () => {
         <div className="text-center sm:text-left">
           <div className="flex items-center justify-center sm:justify-start gap-2 mb-3">
             <div />
-            <img src="./hire_logo.png" className='w-16 h-16 sm:w-20 sm:h-20' alt="hire shield logo" />
+            <img src="./checkwize_logo.png" className='w-16 h-16 sm:w-20 sm:h-20' alt="checkWize logo" />
             <span className="font-semibold text-white text-lg sm:text-xl">CheckWize</span>
           </div>
           <p className="text-xs sm:text-sm">Reliable background verification services to help you trust with confidence.</p>

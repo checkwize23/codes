@@ -176,7 +176,7 @@ const Header = () => {
        <div className="container mx-auto px-2 sm:px-4 flex items-center justify-between h-16 sm:h-18">
          {/* Logo and Title - Hidden on mobile */}
          <Link to="/" className="hidden sm:flex items-center gap-1 sm:gap-2">
-           <img src="./hire_logo.png" alt="Hire Shield logo" className="h-10 w-auto object-contain" />
+           <img src="./checkwize_logo.png" alt="CheckWize logo" className="h-10 w-auto object-contain" />
            <div className='text-lg sm:text-xl md:text-2xl'>
            <span className={`font-semibold ${isTitleOnDark ? 'text-white' : 'text-gray-800'}`}>Check</span>
            <span className={`font-bold ${isTitleOnDark ? 'text-cyan-300' : 'text-cyan-700'}`}>Wize</span>
@@ -322,7 +322,7 @@ const Header = () => {
            {/* Mobile Menu Header with Logo and Title */}
            <div className="container mx-auto px-4 py-3 border-b border-white/20">
              <Link to="/" className="flex items-center gap-2" onClick={() => setShowMobileMenu(false)}>
-               <img src="./hire_logo.png" alt="Hire Shield logo" className="h-8 w-auto object-contain" />
+               <img src="./checkwize_logo.png" alt="CheckWize logo" className="h-8 w-auto object-contain" />
                <div className="text-lg">
                  <span className="font-semibold text-white">Check</span>
                  <span className="font-bold text-cyan-300">Wize</span>

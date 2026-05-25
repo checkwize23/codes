@@ -19,7 +19,7 @@ if (!admin.apps.length) {
         clientEmail: process.env.FB_CLIENT_EMAIL,
         privateKey,
       }),
-      storageBucket: process.env.FB_STORAGE_BUCKET || "hireshield-app-e9bbd.appspot.com",
+      storageBucket: process.env.FB_STORAGE_BUCKET || "checkwize-3f0d1.appspot.com",
     });
 
     console.log("Firebase initialized with .env credentials");

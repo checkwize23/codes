@@ -103,7 +103,7 @@ const ContactPage = () => {
       
       // send email notification
       // NEW - fire and forget, don't await
-      fetch('https://hire-shield-backend.onrender.com/api/service-requests/contact/send-email', {
+      fetch(`${import.meta.env.VITE_API_URL || 'https://codes-4oz0.onrender.com'}/service-requests/contact/send-email`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
       body: JSON.stringify(contactData),

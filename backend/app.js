@@ -19,10 +19,8 @@ const corsOptions = {
     const allowedOrigins = [
       "http://localhost:5173",
       "http://localhost:3000",
-      "https://hireshield-app-e9bbd.web.app",
-      "https://hireshield-app-e9bbd.firebaseapp.com",
-      "https://hireshield.web.app",
-      "https://hireshield.firebaseapp.com",
+      "https://checkwize-3f0d1.web.app",
+      "https://checkwize-3f0d1.firebaseapp.com",
     ];
 
     if (

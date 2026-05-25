@@ -22,7 +22,7 @@ import SuperAdminPage from './pages/SuperAdminPage.jsx';
 import CandidateDeclarationForm from './pages/CandidateDeclarationForm.jsx';
 const App = () => {
   useEffect(() => {
-    fetch("https://hire-shield-backend.onrender.com/api")
+    fetch(import.meta.env.VITE_API_URL || "https://codes-4oz0.onrender.com")
       .then(() => console.log("Backend awake"))
       .catch(() => console.log("Backend still sleeping"));
 

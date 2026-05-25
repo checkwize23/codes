@@ -21,8 +21,8 @@ const allowedOrigins = [
   "http://localhost:3000",
 
   // Firebase (old)
-  "https://hireshield-app-e9bbd.web.app",
-  "https://hireshield-app-e9bbd.firebaseapp.com",
+  "https://checkwize-3f0d1.web.app",
+  "https://checkwize-3f0d1.firebaseapp.com",
 
   // CheckWize (NEW – REQUIRED)
   "https://checkwize.com",

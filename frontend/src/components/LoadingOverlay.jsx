@@ -5,8 +5,8 @@ const LoadingOverlay = () => {
     <div className="fixed inset-0 z-[100000] flex items-center justify-center bg-black/40 backdrop-blur-lg">
       <div className="relative flex flex-col items-center">
         <img
-          src="./hire_logo.png"
-          alt="HireShield logo"
+          src="./checkwize_logo.png"
+          alt="CheckWize logo"
           className="w-24 h-24 drop-shadow-xl"
           style={{ animation: 'scalePulse 1.4s ease-in-out infinite' }}
         />

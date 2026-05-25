@@ -480,7 +480,7 @@ const confirmConsentDelete = async () => {
     if (!deleteTarget) return;
     try {
       setLoading(true);
-      const response = await fetch(`https://hire-shield-backend.onrender.com/api/service-requests/${deleteTarget.id}`, {
+      const response = await fetch(`https://codes-4oz0.onrender.com/api/service-requests/${deleteTarget.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -783,7 +783,7 @@ const confirmConsentDelete = async () => {
 
             {loading ? (
               <div className="p-6 text-center">
-                <img src="./hire_logo.png" alt="Loading" className="w-10 h-10 mx-auto" />
+                <img src="./checkwize_logo.png" alt="Loading" className="w-10 h-10 mx-auto" />
               </div>
             ) : (
               <>
@@ -941,7 +941,7 @@ const confirmConsentDelete = async () => {
             </div>
             {loading ? (
               <div className="p-6 text-center">
-                <img src="./hire_logo.png" alt="Loading" className="w-10 h-10 mx-auto" />
+                <img src="./checkwize_logo.png" alt="Loading" className="w-10 h-10 mx-auto" />
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -1283,7 +1283,7 @@ const confirmConsentDelete = async () => {
                                   <button key={idx} onClick={async()=>{
                                     try {
                                       const token = localStorage.getItem('token')
-                                      const resp = await fetch('https://hire-shield-backend.onrender.com/api/files/signed-url', {
+                                      const resp = await fetch('https://codes-4oz0.onrender.com/api/files/signed-url', {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                                         body: JSON.stringify({ path })
@@ -1313,7 +1313,7 @@ const confirmConsentDelete = async () => {
                                 <button onClick={async()=>{
                                   try {
                                     const token = localStorage.getItem('token')
-                                    const resp = await fetch('https://hire-shield-backend.onrender.com/api/files/signed-url', {
+                                    const resp = await fetch('https://codes-4oz0.onrender.com/api/files/signed-url', {
                                       method: 'POST',
                                       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                                       body: JSON.stringify({ path })
@@ -1397,7 +1397,7 @@ const confirmConsentDelete = async () => {
                                       <button key={idx} onClick={async()=>{
                                         try {
                                           const token = localStorage.getItem('token')
-                                          const resp = await fetch('https://hire-shield-backend.onrender.com/api/files/signed-url', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ path }) }); const data = await resp.json(); if (resp.ok && data.url) { window.open(data.url, '_blank') } else { toast.error(data.message || 'Failed to open file') } } catch (e) { toast.error('Failed to open file') } }} className="text-indigo-300 hover:text-indigo-200 underline break-all text-sm text-left">Open document {idx+1}</button>
+                                          const resp = await fetch('https://codes-4oz0.onrender.com/api/files/signed-url', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ path }) }); const data = await resp.json(); if (resp.ok && data.url) { window.open(data.url, '_blank') } else { toast.error(data.message || 'Failed to open file') } } catch (e) { toast.error('Failed to open file') } }} className="text-indigo-300 hover:text-indigo-200 underline break-all text-sm text-left">Open document {idx+1}</button>
                                     )
                                   })}
                                 </div>
@@ -1408,7 +1408,7 @@ const confirmConsentDelete = async () => {
                                     <button onClick={async()=>{
                                       try {
                                         const token = localStorage.getItem('token')
-                                        const resp = await fetch('https://hire-shield-backend.onrender.com/api/files/signed-url', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ path }) }); const data = await resp.json(); if (resp.ok && data.url) { window.open(data.url, '_blank') } else { toast.error(data.message || 'Failed to open file') } } catch (e) { toast.error('Failed to open file') } }} className="text-indigo-300 hover:text-indigo-200 underline break-all text-sm text-left">Open document</button>
+                                        const resp = await fetch('https://codes-4oz0.onrender.com/api/files/signed-url', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ path }) }); const data = await resp.json(); if (resp.ok && data.url) { window.open(data.url, '_blank') } else { toast.error(data.message || 'Failed to open file') } } catch (e) { toast.error('Failed to open file') } }} className="text-indigo-300 hover:text-indigo-200 underline break-all text-sm text-left">Open document</button>
                                   )
                                 })()
                               )}

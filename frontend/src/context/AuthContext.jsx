@@ -23,8 +23,8 @@ function AuthProvider  ({ children }) {
   const API_BASE_URL = import.meta.env.VITE_API_URL || 
     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
       ? 'http://localhost:3000/api' 
-      : 'https://hire-shield-backend.onrender.com/api');
-
+      : 'https://codes-4oz0.onrender.com');
+      
   // Check if user is authenticated on app load
   useEffect(() => {
     const checkAuth = async () => {
