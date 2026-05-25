@@ -27,6 +27,6 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_HIRESHIELD_APP_E9BBD }}
-          projectId: hireshield-app-e9bbd
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CHECKWIZE_3F0D1 }}
+          projectId: checkwize-3f0d1
           entryPoint: .
