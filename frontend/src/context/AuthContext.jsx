@@ -22,15 +22,15 @@ function AuthProvider  ({ children }) {
   // Dynamic API URL for mobile compatibility
   const API_BASE_URL = import.meta.env.VITE_API_URL || 
     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-      ? 'http://localhost:3000/api' 
+      ? 'http://localhost:3000' 
       : 'https://codes-4oz0.onrender.com');
-      
+
   // Check if user is authenticated on app load
   useEffect(() => {
     const checkAuth = async () => {
       if (token) {
         try {
-          const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+          const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
@@ -68,7 +68,7 @@ function AuthProvider  ({ children }) {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -97,7 +97,7 @@ function AuthProvider  ({ children }) {
 
   const register = async (userData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -131,7 +131,7 @@ function AuthProvider  ({ children }) {
     try {
       localStorage.setItem('token', incomingToken);
       setToken(incomingToken);
-      const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
         headers: {
           'Authorization': `Bearer ${incomingToken}`,
           'Content-Type': 'application/json'
@@ -152,7 +152,7 @@ function AuthProvider  ({ children }) {
   const updateProfile = async (profileData) => {
     try {
       
-      const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -178,7 +178,7 @@ function AuthProvider  ({ children }) {
   const updateSuperAdminProfile = async (profileData) => {
     try {
       
-      const response = await fetch(`${API_BASE_URL}/auth/super-admin/profile`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/super-admin/profile`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -204,7 +204,7 @@ function AuthProvider  ({ children }) {
   const changePassword = async (currentPassword, newPassword) => {
     try {
       
-      const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -227,7 +227,7 @@ function AuthProvider  ({ children }) {
 
   const getAllUsers = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/users`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/users`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -248,7 +248,7 @@ function AuthProvider  ({ children }) {
 
   const createAdmin = async (adminData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/create-admin`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/create-admin`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -274,7 +274,7 @@ function AuthProvider  ({ children }) {
 
   const updateUserRole = async (userId, role) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/users/${userId}/role`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/users/${userId}/role`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -297,7 +297,7 @@ function AuthProvider  ({ children }) {
 
   const updateUserStatus = async (userId, isActive) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/users/${userId}/status`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/users/${userId}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -320,7 +320,7 @@ function AuthProvider  ({ children }) {
 
   const deleteUser = async (userId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/users/${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/users/${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -346,7 +346,7 @@ function AuthProvider  ({ children }) {
       
       const profile = result.user;
       // Ask backend to upsert user and issue JWT
-      const response = await fetch(`${API_BASE_URL}/auth/google`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
