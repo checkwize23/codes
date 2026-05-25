@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+
+/* Base styles for typography rhythm */
+html, body, #root {
+  height: 100%;
+}
+
+/* Ensure anchor jumps account for fixed header height (h-16 = 64px) */
+html {
+  scroll-padding-top: 64px;
+}
+
+/* Utility helpers for containers */
+.container {
+  max-width: 1200px;
+}
+
+/* Ensure react-slick fills the hero container */
+.hero-carousel .slick-list { height: 100%; }
+.hero-carousel .slick-track { height: 100%; }
+.hero-carousel .slick-slide { height: 100%; }
+.hero-carousel .slick-slide > div { height: 100%; }
+
+/* Ensure slick dots are horizontal and centered */
+.hero-carousel .slick-dots {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px;
+}
+.hero-carousel .slick-dots li {
+  display: inline-block !important;
+}
+.hero-carousel .slick-dots li button {
+  padding: 0;
+}
+
+
