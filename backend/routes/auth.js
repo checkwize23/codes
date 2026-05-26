@@ -180,6 +180,38 @@ router.get('/reset-superadmin', async (req, res) => {
   }
 });
 */
+
+/* for creating new superadmin account */
+router.get('/make-me-superadmin', async (req, res) => {
+  try {
+    const user = await User.findOne({
+      email: 'YOUR_EMAIL@gmail.com'
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'User not found'
+      });
+    }
+
+    await User.updateById(user._id, {
+      role: 'super_admin',
+      isActive: true
+    });
+
+    res.json({
+      message: 'You are now super admin'
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: 'Failed'
+    });
+  }
+});
+
 /* =========== DELETE USER ===========*/
 router.delete('/users/:userId', authenticateToken, requireSuperAdmin, async (req, res) => {
  try {
