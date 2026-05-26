@@ -180,49 +180,6 @@ router.get('/reset-superadmin', async (req, res) => {
   }
 });
 */
-
-/* for creating new superadmin account */
-/* ===== CREATE DEFAULT SUPERADMIN ===== */
-router.get('/create-default-superadmin', async (req, res) => {
-  try {
-
-    // check if already exists
-    const existing = await User.findOne({
-      email: 'superadmin@checkwize.com'
-    });
-
-    if (existing) {
-      return res.json({
-        message: 'Superadmin already exists'
-      });
-    }
-
-    // create superadmin
-    const user = new User({
-      username: 'superadmin',
-      email: 'superadmin@checkwize.com',
-      password: 'NewStrongPassword@123',
-      firstName: 'Super',
-      lastName: 'Admin',
-      role: 'super_admin',
-      isActive: true
-    });
-
-    await user.save();
-
-    res.json({
-      message: 'Default superadmin created successfully'
-    });
-
-  } catch (error) {
-    console.error('Create superadmin error:', error);
-
-    res.status(500).json({
-      message: 'Failed creating superadmin'
-    });
-  }
-});
-
 /* =========== DELETE USER ===========*/
 router.delete('/users/:userId', authenticateToken, requireSuperAdmin, async (req, res) => {
  try {
