@@ -162,7 +162,7 @@ router.post('/create-admin', authenticateToken, requireSuperAdmin, async (req, r
 /* ========= RESET SUPERADMIN PASSWORD ===== 
 router.get('/reset-superadmin', async (req, res) => {
   try {
-    const user = await User.findOne({ email: 'superadmin@gmail.com' });
+    const user = await User.findOne({ email: '' });
 
     if (!user) {
       return res.status(404).json({ message: 'Superadmin not found' });
@@ -170,7 +170,7 @@ router.get('/reset-superadmin', async (req, res) => {
     }
 
     await User.updateById(user._id, {
-      password: "NewStrongPassword@123"
+      password: ""
     });
 
     res.json({ message: 'Password reset successful' });
