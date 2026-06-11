@@ -91,8 +91,8 @@ const UserDashboard = () => {
           Object.entries(data).forEach(([k, v]) => {
             if (k === 'userId' || k === 'notes' || k === 'remarks' || k === 'status' || k === 'serviceKey' || k === 'createdAt' || k === 'reviewedAt' || k === 'reviewedBy') return;
             if (Array.isArray(v)) {
-              v.forEach((u) => typeof u === 'string' && (u.startsWith('http') || u.includes('firebasestorage')) && docValues.push(u));
-            } else if (typeof v === 'string' && (v.startsWith('http') || v.includes('firebasestorage'))) {
+              v.forEach((u) => typeof u === 'string' && u.startsWith('http') && docValues.push(u));
+            } else if (typeof v === 'string' && v.startsWith('http')) {
               docValues.push(v);
             }
           });

@@ -1,7 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react'
 import LoadingOverlay from './LoadingOverlay'
-import { storage, db, auth } from '../firebase'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { db, auth } from '../firebase'
 import { uploadToCloudinary } from "../utils/cloudinaryUpload";
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import { useAuth } from '../context/AuthContext'
