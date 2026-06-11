@@ -986,9 +986,9 @@ const confirmConsentDelete = async () => {
                     <label className="block text-sm font-medium text-gray-300">Documents</label>
                     <div className="mt-2 space-y-2">
                       {Object.entries(selectedApp).filter(([k,v]) => {
-                        if (['userId','status','serviceKey','createdAt','reviewedAt','reviewedBy','notes','remarks','id'].includes(k)) return false;
-                        if (Array.isArray(v)) return v.some(x => typeof x === 'string' && (x.startsWith('http') || x.includes('firebasestorage')));
-                        return typeof v === 'string' && (v.startsWith('http') || v.includes('firebasestorage'));
+                        if (['userId','status','serviceKey','createdAt','reviewedAt','reviewedBy','notes','remarks','id','userName','userEmail','isAllServicesSubmission','allServicesTimestamp'].includes(k)) return false;
+                        if (Array.isArray(v)) return v.some(x => typeof x === 'string' && x.startsWith('http'));
+                        return typeof v === 'string' && v.startsWith('http');
                       }).map(([k,v]) => (
                         <div key={k} className="bg-white/5 rounded-lg p-3 border border-white/10">
                           <div className="text-xs text-gray-400 mb-2">{k.replace(/[-_]/g,' ')}</div>
@@ -1004,22 +1004,7 @@ const confirmConsentDelete = async () => {
                                   } catch { return '' }
                                 })()
                                 return (
-                                  <button key={idx} onClick={async()=>{
-                                    try {
-                                      const token = localStorage.getItem('token')
-                                      const resp = await fetch(`${import.meta.env.VITE_API_URL || 'https://codes-4oz0.onrender.com'}/files/signed-url`, {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                                        body: JSON.stringify({ path })
-                                      })
-                                      const data = await resp.json()
-                                      if (resp.ok && data.url) {
-                                        window.open(data.url, '_blank')
-                                      } else {
-                                        toast.error(data.message || 'Failed to open file')
-                                      }
-                                    } catch (e) { toast.error('Failed to open file') }
-                                  }} className="text-indigo-300 hover:text-indigo-200 underline break-all text-sm text-left">Open document {idx+1}</button>
+                                 <button key={idx} onClick={() => window.open(u, '_blank')} className="text-indigo-300 hover:text-indigo-200 underline break-all text-sm text-left">Open document {idx+1}</button> 
                                 )
                               })}
                             </div>
@@ -1033,23 +1018,8 @@ const confirmConsentDelete = async () => {
                                   return decoded.split('/o/')[1]?.split('?')[0] || ''
                                 } catch { return '' }
                               })()
-                              return (
-                                <button onClick={async()=>{
-                                  try {
-                                    const token = localStorage.getItem('token')
-                                    const resp = await fetch(`${import.meta.env.VITE_API_URL || 'https://codes-4oz0.onrender.com'}/files/signed-url`, {
-                                      method: 'POST',
-                                      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                                      body: JSON.stringify({ path })
-                                    })
-                                    const data = await resp.json()
-                                    if (resp.ok && data.url) {
-                                      window.open(data.url, '_blank')
-                                    } else {
-                                      toast.error(data.message || 'Failed to open file')
-                                    }
-                                  } catch (e) { toast.error('Failed to open file') }
-                                }} className="text-indigo-300 hover:text-indigo-200 underline break-all text-sm text-left">Open document</button>
+                                return (
+                                <button onClick={() => window.open(String(v), '_blank')} className="text-indigo-300 hover:text-indigo-200 underline break-all text-sm text-left">Open document</button>
                               )
                             })()
                           )}
@@ -1124,9 +1094,9 @@ const confirmConsentDelete = async () => {
                         <label className="block text-xs font-medium text-gray-300">Documents</label>
                         <div className="mt-2 space-y-2">
                           {Object.entries(selectedApp).filter(([k,v]) => {
-                            if (['userId','status','serviceKey','createdAt','reviewedAt','reviewedBy','notes','remarks','id'].includes(k)) return false;
-                            if (Array.isArray(v)) return v.some(x => typeof x === 'string' && (x.startsWith('http') || x.includes('firebasestorage')));
-                            return typeof v === 'string' && (v.startsWith('http') || v.includes('firebasestorage'));
+                            if (['userId','status','serviceKey','createdAt','reviewedAt','reviewedBy','notes','remarks','id','userName','userEmail','isAllServicesSubmission','allServicesTimestamp'].includes(k)) return false;
+                            if (Array.isArray(v)) return v.some(x => typeof x === 'string' && x.startsWith('http'));
+                            return typeof v === 'string' && v.startsWith('http');
                           }).map(([k,v]) => (
                             <div key={k} className="bg-white/5 rounded-lg p-3 border border-white/10">
                               <div className="text-xs text-gray-400 mb-2">{k.replace(/[-_]/g,' ')}</div>
@@ -1135,14 +1105,13 @@ const confirmConsentDelete = async () => {
                                   {v.filter(u => typeof u === 'string').map((u, idx) => {
                                     const path = (() => { try { const decoded = decodeURIComponent(u); const m = decoded.match(/\/o\/(.*)\?alt=/); if (m && m[1]) return m[1]; return decoded.split('/o/')[1]?.split('?')[0] || '' } catch { return '' } })();
                                     return (
-                                      <button key={idx} onClick={async()=>{ try { const token = localStorage.getItem('token'); 
-                                        const resp = await fetch(`${import.meta.env.VITE_API_URL || 'https://codes-4oz0.onrender.com'}/files/signed-url`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ path }) }); const data = await resp.json(); if (resp.ok && data.url) { window.open(data.url, '_blank') } else { toast.error(data.message || 'Failed to open file') } } catch (e) { toast.error('Failed to open file') } }} className="text-indigo-300 hover:text-indigo-200 underline break-all text-sm text-left">Open document {idx+1}</button>
+                                      <button key={idx} onClick={() => window.open(u, '_blank')} className="text-indigo-300 hover:text-indigo-200 underline break-all text-sm text-left">Open document {idx+1}</button>  
                                     )
                                   })}
                                 </div>
                               ) : (
                                 (()=>{ const path = (() => { try { const decoded = decodeURIComponent(String(v)); const m = decoded.match(/\/o\/(.*)\?alt=/); if (m && m[1]) return m[1]; return decoded.split('/o/')[1]?.split('?')[0] || '' } catch { return '' } })(); return (
-                                  <button onClick={async()=>{ try { const resp = await fetch(`${import.meta.env.VITE_API_URL || 'https://codes-4oz0.onrender.com'}/files/signed-url`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ path }) }); const data = await resp.json(); if (resp.ok && data.url) { window.open(data.url, '_blank') } else { toast.error(data.message || 'Failed to open file') } } catch (e) { toast.error('Failed to open file') } }} className="text-indigo-300 hover:text-indigo-200 underline break-all text-sm text-left">Open document</button>
+                                  <button onClick={() => window.open(String(v), '_blank')} className="text-indigo-300 hover:text-indigo-200 underline break-all text-sm text-left">Open document</button>
                                 ) })()
                               )}
                             </div>
