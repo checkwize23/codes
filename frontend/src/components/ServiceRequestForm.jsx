@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect, useRef } from 'react'
 import LoadingOverlay from './LoadingOverlay'
 import { storage, db, auth } from '../firebase'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { uploadToCloudinary } from "../utils/cloudinaryUpload";
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
@@ -370,9 +371,7 @@ const ServiceRequestForm = () => {
         if (file && file.size > MAX_FILE_BYTES) {
           throw new Error(`File ${file.name} exceeds 2MB limit`)
         }
-        const fileRef = ref(storage, `${basePath}/${key}/${Date.now()}-${file.name}`)
-        await uploadBytes(fileRef, file, { contentType: file.type || 'application/octet-stream' })
-        urls.push(await getDownloadURL(fileRef))
+        urls.push(await uploadToCloudinary(file))
       }
       return urls
     } else {
@@ -380,9 +379,7 @@ const ServiceRequestForm = () => {
       if (file && file.size > MAX_FILE_BYTES) {
         throw new Error(`File ${file.name} exceeds 2MB limit`)
       }
-      const fileRef = ref(storage, `${basePath}/${key}/${Date.now()}-${file.name}`)
-      await uploadBytes(fileRef, file, { contentType: file.type || 'application/octet-stream' })
-      return await getDownloadURL(fileRef)
+      return await uploadToCloudinary(file)
     }
   }
 
