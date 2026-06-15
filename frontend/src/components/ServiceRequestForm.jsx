@@ -6,6 +6,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
 import { signInAnonymously } from 'firebase/auth'
+import { getCurrentAddress } from '../../utils/getCurrentAddress';
 
 const SERVICES = {
   'all-services': {
@@ -20,7 +21,16 @@ const SERVICES = {
       { key: 'aadhaar', label: 'Aadhaar Card', multiple: false },
       { key: 'passport', label: 'Passport', multiple: false },
       { key: 'rentalAgreement', label: 'Rental Agreement', multiple: false },
+      { key: 'electricityBill', label: 'Electricity Bill', multiple: false},
+      { key: 'waterBill', label: 'Water Bill', multiple: false},
+      { key: 'gasBill', label: 'Gas Bill', multiple: false},
     ],
+
+    extraFields: [
+      { key: 'detectedAddress', label: 'Detected Address', type: 'text'},
+      { key: 'latitude', label: 'Latitude', type: 'hidden'},
+      { key: 'longitude', label: 'Longitude', type: 'hidden'},
+    ]
   },
   employment: {
     label: 'Employment Verification',
