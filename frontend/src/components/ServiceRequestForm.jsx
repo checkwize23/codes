@@ -1117,6 +1117,34 @@ const ServiceRequestForm = () => {
   </div>
 )}
 
+{serviceKey === "address" && (
+<div className="space-y-4">
+
+  <button type="button" onClick={async () => {
+  try {
+  const location = await getCurrentAddress()
+
+  setFormState(prev => ({
+  ...prev,
+  detectedAddress: location.address,
+  latitude: location.latitude,
+  longitude: location.longitude
+  }))
+  toast.success("Address captured")
+  } catch {
+  toast.error("Location permission denied")
+  }
+  }}
+  className="px-4 py-2 rounded-lg bg-cyan-600 text-white">
+  Share Current Address
+  </button>
+
+  {formState.detectedAddress && (
+  <textarea readOnly value={formState.detectedAddress} className="w-full rounded-lg p-3 bg-gray-800 text-white" />
+  )}
+</div>
+)}
+
         {/* Extra fields for single services */}
         {serviceKey !== 'all-services' && current.extraFields && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
