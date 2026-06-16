@@ -1340,6 +1340,27 @@ const confirmConsentDelete = async () => {
                       <label className="block text-sm font-medium text-gray-300">Remarks</label>
                       <input value={appUpdate.remarks} onChange={(e)=>setAppUpdate(s=>({ ...s, remarks: e.target.value }))} className="mt-1 block w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 text-white" placeholder="Optional remarks" />
                     </div>
+
+                    /* approved result pdf attachement */
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-1">
+                        Attach Result PDF <span className="text-gray-400 font-normal">(optional - Visible to user after approval)</span>
+                      </label>
+                      {selectedApp.resultPdf && (
+                        <div className="mb-2 flex items-center gap-2">
+                          <span className="text-xs text-gray-400">Current:</span>
+                          <a href={selectedApp.resultPdf} target="_blank" rel="noopener noreferred"
+                            className="text-cyan-400 hover:text-cyan-300 underline text-sm">
+                              View existing PDF 
+                            </a>
+                        </div>      
+                      )}
+                      <input type="file" accept=".pdf" onChange={(e)=> setAppUpdate(s => ({ ...s, resultPdf: e.target.files?.[0] || null }))}
+                        className="block w-full text-sm text-gray-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-cyan-600 file:text-white hover:file:bg-cyan-700 file:cursor-pointer"/>
+                        {appUpdate.resultPdf && (
+                          <p className="text-xs text-emerald-400 mt-1">✓ {appUpdate.resultPdf.name} selected </p>
+                        )}
+                    </div>    
                   </div>
 
                   {/* Mobile 2-step content */}
@@ -1384,6 +1405,22 @@ const confirmConsentDelete = async () => {
                             <input value={appUpdate.remarks} onChange={(e)=>setAppUpdate(s=>({ ...s, remarks: e.target.value }))} className="mt-1 block w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 text-white" placeholder="Optional remarks" />
                           </div>
                         </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-300">
+                            Attach Result PDF <span className="text-gray-500">(optional)</span>
+                          </label>
+                          {selectedApp.resultPdf && (
+                            <a href={selectedApp.resultPdf} target="_blank" rel="noopener noreferrer"
+                              className="text-cyan-400 underline text-xs block mb-1">
+                              View existing PDF ↗
+                            </a>
+                          )}
+                          <input type="file" accept=".pdf" onChange={(e) => setAppUpdate(s => ({ ...s, resultPdf: e.target.files?.[0] || null }))}
+                            className="block w-full text-xs text-gray-300 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-cyan-600 file:text-white hover:file:bg-cyan-700 file:cursor-pointer mt-1"/>
+                            {appUpdate.resultPdf && (
+                              <p className="text-xs text-emerald-400 mt-1">✓ {appUpdate.resultPdf.name}</p>
+                            )}
+                          </div>
                       </div>
                     )}
                     {appViewStep === 2 && (
@@ -1435,11 +1472,28 @@ const confirmConsentDelete = async () => {
                   <button onClick={async ()=>{
                     try {
                       const toBackend = (s)=> s === 'Pending' ? 'submitted' : s.toLowerCase().replace(/\s+/g,'_');
+                      
+                      // Upload PDf result attachment
+                      let resultPdfUrl = selectedApp.resultPdf || null;
+                      if (appUpdate.resultPdf){
+                        const formData = new FormData();
+                        formData.append('file', appUpdate.resultPdf);
+                        formData.append('upload_preset', "checkwize_documents");
+                        formData.append('resource_type','raw');
+                        const res = await fetch ("'https://api.cloudinary.com/v1_1/drvodxyko/raw/upload',",{
+                          method: 'POST',
+                          body: formData
+                      });
+                      const data = await res.json();
+                      resultPdfUrl = data.secure_url;
+                    }
+
                       await updateDoc(doc(db,'serviceRequests', selectedApp.id), {
                         status: toBackend(appUpdate.status),
                         remarks: appUpdate.remarks || '',
                         reviewedBy: `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'Super Admin',
-                        reviewedAt: new Date()
+                        reviewedAt: new Date(),
+                        ...(resultPdfUrl ? { resultPdf: resultPdfUrl } : {})
                       });
                       toast.success('Application updated');
                       setShowAppView(false);

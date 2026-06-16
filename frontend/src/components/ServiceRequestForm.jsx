@@ -24,6 +24,7 @@ const SERVICES = {
       { key: 'electricityBill', label: 'Electricity Bill', multiple: false},
       { key: 'waterBill', label: 'Water Bill', multiple: false},
       { key: 'gasBill', label: 'Gas Bill', multiple: false},
+      { key: 'geotaggedPhoto', label: 'Geotagged Photo', multiple: false},
     ],
 
     extraFields: [
@@ -1138,10 +1139,11 @@ const ServiceRequestForm = () => {
   className="px-4 py-2 rounded-lg bg-cyan-600 text-white">
   Share Current Address
   </button>
-
+  
   {formState.detectedAddress && (
   <textarea readOnly value={formState.detectedAddress} className="w-full rounded-lg p-3 bg-gray-800 text-white" />
   )}
+  
 </div>
 )}
 

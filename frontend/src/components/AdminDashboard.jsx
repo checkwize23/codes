@@ -1038,6 +1038,47 @@ const confirmConsentDelete = async () => {
                         <option value="Rejected" className="bg-gray-800 text-white">Rejected</option>
                       </select>
                     </div>
+                    {/* Location - Desktop */}
+                    {(selectedApp.detectedAddress || selectedApp.latitude) && (
+                      <div className="hidden sm:block">
+                        <label className="block text-sm font-medium text-gray-300 mb-2">Submitted Location</label>
+                        <div className="bg-white/5 rounded-lg p-3 border border-white/10 space-y-1">
+                          {selectedApp.detectedAddress && (
+                            <p className="text-sm text-white">{selectedApp.detectedAddress}</p>
+                          )}
+                          {selectedApp.latitude && (
+                            <p className="text-xs text-gray-400">{selectedApp.latitude}, {selectedApp.longitude}</p>
+                          )}
+                          {selectedApp.latitude && (
+                            <a href={`https://www.google.com/maps?q=${selectedApp.latitude},${selectedApp.longitude}`} target="_blank" rel="noopener noreferrer"
+                              className="text-cyan-400 hover:text-cyan-300 underline text-sm block">
+                              View on Google Maps ↗
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Result PDF upload - Desktop */}
+                    <div className="hidden sm:block md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-1">
+                        Attach Result PDF <span className="text-gray-400 font-normal">(optional — visible to user after approval)</span>
+                      </label>
+                      {selectedApp.resultPdf && (
+                        <div className="mb-2">
+                          <a href={selectedApp.resultPdf} target="_blank" rel="noopener noreferrer"
+                            className="text-cyan-400 hover:text-cyan-300 underline text-sm">
+                            View existing PDF ↗
+                          </a>
+                        </div>
+                      )}
+                      <input type="file" accept=".pdf" onChange={(e) => setAppUpdate(s => ({ ...s, resultPdf: e.target.files?.[0] || null }))}
+                        className="block w-full text-sm text-gray-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-cyan-600 file:text-white hover:file:bg-cyan-700 file:cursor-pointer"/>
+                      {appUpdate.resultPdf && (
+                        <p className="text-xs text-emerald-400 mt-1">✓ {appUpdate.resultPdf.name} selected</p>
+                      )}
+                    </div>
+
                     <div>
                       <label className="block text-sm font-medium text-gray-300">Remarks</label>
                       <input value={appUpdate.remarks} onChange={(e)=>setAppUpdate(s=>({ ...s, remarks: e.target.value }))} className="mt-1 block w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 text-white" placeholder="Optional remarks" />
@@ -1101,6 +1142,22 @@ const confirmConsentDelete = async () => {
                             <label className="block text-xs font-medium text-gray-300">Remarks</label>
                             <input value={appUpdate.remarks} onChange={(e)=>setAppUpdate(s=>({ ...s, remarks: e.target.value }))} className="mt-1 block w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 text-white" placeholder="Optional remarks" />
                           </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-300">
+                              Attach Result PDF <span className="text-gray-500">(optional)</span>
+                            </label>
+                            {selectedApp.resultPdf && (
+                              <a href={selectedApp.resultPdf} target="_blank" rel="noopener noreferrer"
+                                className="text-cyan-400 underline text-xs block mb-1">
+                                View existing PDF ↗
+                              </a>
+                            )}
+                            <input type="file" accept=".pdf" onChange={(e) => setAppUpdate(s => ({ ...s, resultPdf: e.target.files?.[0] || null }))}
+                              className="block w-full text-xs text-gray-300 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-cyan-600 file:text-white hover:file:bg-cyan-700 file:cursor-pointer mt-1"/>
+                            {appUpdate.resultPdf && (
+                              <p className="text-xs text-emerald-400 mt-1">✓ {appUpdate.resultPdf.name}</p>
+                            )}
+                          </div>
                         </div>
                       </div>
                     )}
@@ -1150,11 +1207,28 @@ const confirmConsentDelete = async () => {
                   <button onClick={async ()=>{
                     try {
                       const toBackend = (s)=> s === 'Pending' ? 'submitted' : s.toLowerCase().replace(/\s+/g,'_');
+                      
+                      // result approved pdf attachment
+                      let resultPdfUrl = selectedApp.resultPdf || null;
+                      if (appUpdate.resultPdf) {
+                        const formData = new FormData();
+                        formData.append('file', appUpdate.resultPdf);
+                        formData.append('upload_preset', 'checkwize_documents'); 
+                        formData.append('resource_type', 'raw');
+                        const res = await fetch(`'https://api.cloudinary.com/v1_1/drvodxyko/raw/upload',`, { 
+                          method: 'POST',
+                          body: formData
+                        });
+                        const data = await res.json();
+                        resultPdfUrl = data.secure_url;
+                      }
+
                       await updateDoc(doc(db,'serviceRequests', selectedApp.id), {
                         status: toBackend(appUpdate.status),
                         remarks: appUpdate.remarks || '',
                         reviewedBy: `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'Admin',
-                        reviewedAt: new Date()
+                        reviewedAt: new Date(),
+                        ...(resultPdfUrl ? { resultPdf: resultPdfUrl } : {})
                       });
                       toast.success('Application updated');
                       setShowAppView(false);
@@ -1693,38 +1767,6 @@ const confirmConsentDelete = async () => {
                       <p className="text-sm text-white">{formatDate(selectedConsent.submittedAt)}</p>
                     </div>
                   <div>
-
-                    {/* Location Data */}
-                    {(selectedApp.detectedAddress || selectedApp.latitude) && (
-                    <div className="hidden sm:block">
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Submitted Location
-                      </label>
-                    <div className="bg-white/5 rounded-lg p-3 border border-white/10 space-y-1">
-                      {selectedApp.detectedAddress && (
-                        <p className="text-sm text-white">
-                          <span className="text-gray-400">Address: </span>
-                          {selectedApp.detectedAddress}
-                        </p>
-                      )}
-                      {selectedApp.latitude && (
-                        <p className="text-sm text-white">
-                          <span className="text-gray-400">Lat: </span>
-                          {selectedApp.latitude}
-                          <span className="text-gray-400 ml-4">Lng: </span>
-                          {selectedApp.longitude}
-                        </p>
-                      )}
-                      {selectedApp.latitude && (
-                        <a href={`https://www.google.com/maps?q=${selectedApp.latitude},${selectedApp.longitude}`}
-                        target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 underline text-sm">
-                          View on Google Maps
-                       </a>
-                      )}
-                    </div>
-                  </div>
-                )}
-
                       <label className="block text-sm font-medium text-gray-300">Current Status</label>
                       <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
                         (selectedConsent.status || 'pending').toLowerCase() === 'approved' ? 'bg-green-100 text-green-800' :

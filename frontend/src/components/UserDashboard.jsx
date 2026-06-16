@@ -112,6 +112,7 @@ const UserDashboard = () => {
             documents: docValues,
             notes: data.notes || '',
             remarks: data.remarks || '',
+            resultPdf: data.resultPdf || null,
             referenceNames: Array.isArray(data.referenceNames) ? data.referenceNames.filter((n) => typeof n === 'string' && n.trim() !== '') : []
           };
         });
@@ -164,6 +165,7 @@ const UserDashboard = () => {
                   documents: docValues,
                   notes: data.notes || '',
                   remarks: data.remarks || '',
+                  resultPdf: data.resultPdf || null,
                   referenceNames: Array.isArray(data.referenceNames) ? data.referenceNames.filter((n) => typeof n === 'string' && n.trim() !== '') : []
                 };
               });
@@ -1084,6 +1086,21 @@ const UserDashboard = () => {
                         <p className="text-sm text-white bg-white/10 backdrop-blur-sm p-3 rounded-lg border border-white/20 mt-2">
                           {selectedApplication.remarks}
                         </p>
+                      </div>
+                    )}
+                    {selectedApplication.status === 'Approved' && selectedApplication.resultPdf && (
+                      <div className="mt-3 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
+                        <p className="text-xs text-emerald-400 font-semibold uppercase tracking-wider mb-1">
+                          Verification Result
+                        </p>
+                        <p className="text-xs text-gray-300 mb-2">
+                          Official verification PDF issued by our team. You may use this for bank, court, or other official purposes.
+                        </p>
+                        <a href={selectedApplication.resultPdf} target="_blank" rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                          <FaFileAlt className="w-4 h-4" />
+                          Download Verification PDF
+                        </a>
                       </div>
                     )}
                   </div>
