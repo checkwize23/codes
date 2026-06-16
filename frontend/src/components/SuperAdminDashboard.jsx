@@ -1303,6 +1303,28 @@ const confirmConsentDelete = async () => {
                       ))}
                     </div>
                   </div>
+                  {/* Location - Desktop */}
+                  {(selectedApp.detectedAddress || selectedApp.latitude) && (
+                    <div className="hidden sm:block">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">Submitted Location</label>
+                      <div className="bg-white/5 rounded-lg p-3 border border-white/10 space-y-1">
+                        {selectedApp.detectedAddress && (
+                          <p className="text-sm text-white">{selectedApp.detectedAddress}</p>
+                        )}
+                        {selectedApp.latitude && (
+                          <p className="text-xs text-gray-400">
+                            {selectedApp.latitude}, {selectedApp.longitude}
+                          </p>
+                        )}
+                        {selectedApp.latitude && (
+                          <a href={`https://www.google.com/maps?q=${selectedApp.latitude},${selectedApp.longitude}`}
+                            target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 underline text-sm block">
+                            View on Google Maps ↗
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  )}
                   <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-300">Status</label>
@@ -1334,6 +1356,22 @@ const confirmConsentDelete = async () => {
                             <p className="text-sm text-white">{formatDate(selectedApp.createdAt)}</p>
                           </div>
                         </div>
+                        {(selectedApp.detectedAddress || selectedApp.latitude) && (
+                          <div className="bg-white/5 rounded-lg p-3 border border-white/10 space-y-1">
+                            <label className="block text-xs font-medium text-gray-300 mb-1">
+                              Submitted Location
+                            </label>
+                            {selectedApp.detectedAddress && (
+                              <p className="text-sm text-white break-words">{selectedApp.detectedAddress}</p>
+                            )}
+                            {selectedApp.latitude && (
+                              <a href={`https://www.google.com/maps?q=${selectedApp.latitude},${selectedApp.longitude}`}
+                                target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 underline text-sm">
+                                View on Google Maps
+                              </a>
+                            )}
+                          </div>
+                        )}
                         <div className="grid grid-cols-1 gap-3">
                           <div>
                             <label className="block text-xs font-medium text-gray-300">Status</label>

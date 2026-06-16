@@ -1057,7 +1057,22 @@ const confirmConsentDelete = async () => {
                             <label className="block text-xs font-medium text-gray-300">Submitted</label>
                             <p className="text-sm text-white">{formatDate(selectedApp.createdAt)}</p>
                           </div>
-
+                            {(selectedApp.detectedAddress || selectedApp.latitude) && (
+                              <div className="bg-white/5 rounded-lg p-3 border border-white/10 space-y-1">
+                                <label className="block text-xs font-medium text-gray-300 mb-1">
+                                  Submitted Location
+                                </label>
+                                {selectedApp.detectedAddress && (
+                                  <p className="text-sm text-white break-words">{selectedApp.detectedAddress}</p>
+                                )}
+                                {selectedApp.latitude && (
+                                  <a href={`https://www.google.com/maps?q=${selectedApp.latitude},${selectedApp.longitude}`}
+                                    target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 underline text-sm">
+                                    View on Google Maps
+                                  </a>
+                                )}
+                              </div>
+                            )}
                           {selectedApp.serviceKey === "consent" && selectedApp.consentData && (
                             <div className="ng-white/5 rounded-lg p-3 border border-white/10">
                               <label className="block text-xs font-medium text-gray-300 mb-1">
@@ -1678,6 +1693,38 @@ const confirmConsentDelete = async () => {
                       <p className="text-sm text-white">{formatDate(selectedConsent.submittedAt)}</p>
                     </div>
                   <div>
+
+                    {/* Location Data */}
+                    {(selectedApp.detectedAddress || selectedApp.latitude) && (
+                    <div className="hidden sm:block">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Submitted Location
+                      </label>
+                    <div className="bg-white/5 rounded-lg p-3 border border-white/10 space-y-1">
+                      {selectedApp.detectedAddress && (
+                        <p className="text-sm text-white">
+                          <span className="text-gray-400">Address: </span>
+                          {selectedApp.detectedAddress}
+                        </p>
+                      )}
+                      {selectedApp.latitude && (
+                        <p className="text-sm text-white">
+                          <span className="text-gray-400">Lat: </span>
+                          {selectedApp.latitude}
+                          <span className="text-gray-400 ml-4">Lng: </span>
+                          {selectedApp.longitude}
+                        </p>
+                      )}
+                      {selectedApp.latitude && (
+                        <a href={`https://www.google.com/maps?q=${selectedApp.latitude},${selectedApp.longitude}`}
+                        target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 underline text-sm">
+                          View on Google Maps
+                       </a>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                       <label className="block text-sm font-medium text-gray-300">Current Status</label>
                       <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
                         (selectedConsent.status || 'pending').toLowerCase() === 'approved' ? 'bg-green-100 text-green-800' :
