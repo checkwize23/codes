@@ -956,8 +956,8 @@ const confirmConsentDelete = async () => {
         {/* Application Review Modal */}
         {showAppView && selectedApp && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full z-[9999] flex items-center justify-center modal-backdrop">
-            <div className="relative mx-auto p-3 sm:p-0 w-full sm:w-full max-w-2xl">
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all">
+            <div className="relative mx-auto p-3 sm:p-0 w-full sm:w-full max-w-2xl my-8">
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all max-h-[85vh] overflow-y-auto">
                 <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
@@ -1215,7 +1215,7 @@ const confirmConsentDelete = async () => {
                         formData.append('file', appUpdate.resultPdf);
                         formData.append('upload_preset', 'checkwize_documents'); 
                         formData.append('resource_type', 'raw');
-                        const res = await fetch(`'https://api.cloudinary.com/v1_1/drvodxyko/raw/upload',`, { 
+                        const res = await fetch('https://api.cloudinary.com/v1_1/drvodxyko/raw/upload', { 
                           method: 'POST',
                           body: formData
                         });

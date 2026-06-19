@@ -1238,10 +1238,10 @@ const confirmConsentDelete = async () => {
 
         {/* Application Review Modal */}
         {showAppView && selectedApp && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full z-[9999] flex items-center justify-center modal-backdrop">
-            <div className="relative mx-auto p-3 sm:p-0 w-full sm:w-full max-w-2xl">
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all">
-                <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm h-full w-full z-[9999] flex items-center justify-center modal-backdrop p-3 sm:p-6">
+            <div className="relative mx-auto w-full sm:w-full max-w-2xl max-h-[90vh] flex flex-col">
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all flex flex-col max-h-[90vh] overflow-hidden">
+                <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20 flex-shrink-0">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
                       <FaFileAlt className="w-5 h-5 text-white" />
@@ -1253,7 +1253,7 @@ const confirmConsentDelete = async () => {
                   </div>
                   <button onClick={() => setShowAppView(false)} className="text-gray-400 hover:text-white transition-colors duration-200"><FaTimes className="w-6 h-6" /></button>
                 </div>
-                <div className="px-4 sm:px-6 py-4 space-y-4">
+                <div className="px-4 sm:px-6 py-4 space-y-4 overflow-y-auto flex-1">
                   {/* Desktop/tablet full layout */}
                   <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -1341,7 +1341,7 @@ const confirmConsentDelete = async () => {
                       <input value={appUpdate.remarks} onChange={(e)=>setAppUpdate(s=>({ ...s, remarks: e.target.value }))} className="mt-1 block w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 text-white" placeholder="Optional remarks" />
                     </div>
 
-                    /* approved result pdf attachement */
+                    {/* Approved result PDF attachment */}
                     <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-300 mb-1">
                         Attach Result PDF <span className="text-gray-400 font-normal">(optional - Visible to user after approval)</span>
@@ -1349,7 +1349,7 @@ const confirmConsentDelete = async () => {
                       {selectedApp.resultPdf && (
                         <div className="mb-2 flex items-center gap-2">
                           <span className="text-xs text-gray-400">Current:</span>
-                          <a href={selectedApp.resultPdf} target="_blank" rel="noopener noreferred"
+                          <a href={selectedApp.resultPdf} target="_blank" rel="noopener noreferrer"
                             className="text-cyan-400 hover:text-cyan-300 underline text-sm">
                               View existing PDF 
                             </a>
@@ -1467,7 +1467,7 @@ const confirmConsentDelete = async () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center justify-end space-x-3 px-6 py-4 bg-white/5 rounded-b-2xl">
+                <div className="flex items-center justify-end space-x-3 px-6 py-4 bg-white/5 rounded-b-2xl flex-shrink-0">
                   <button onClick={()=>setShowAppView(false)} className="px-4 py-2 text-sm font-medium text-gray-300 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg hover:bg-white/20">Close</button>
                   <button onClick={async ()=>{
                     try {
@@ -1480,10 +1480,10 @@ const confirmConsentDelete = async () => {
                         formData.append('file', appUpdate.resultPdf);
                         formData.append('upload_preset', "checkwize_documents");
                         formData.append('resource_type','raw');
-                        const res = await fetch ("'https://api.cloudinary.com/v1_1/drvodxyko/raw/upload',",{
+                        const res = await fetch("https://api.cloudinary.com/v1_1/drvodxyko/raw/upload", {
                           method: 'POST',
                           body: formData
-                      });
+                        });
                       const data = await res.json();
                       resultPdfUrl = data.secure_url;
                     }
@@ -1906,11 +1906,11 @@ const confirmConsentDelete = async () => {
 
       {/* Consent Form Review Modal */}
       {showConsentView && selectedConsent && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full z-[9999] flex items-center justify-center">
-          <div className="relative mx-auto p-3 sm:p-0 w-full max-w-3xl">
-            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm h-full w-full z-[9999] flex items-center justify-center p-3 sm:p-6">
+          <div className="relative mx-auto w-full max-w-3xl max-h-[90vh] flex flex-col">
+            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 flex flex-col max-h-[90vh] overflow-hidden">
               {/* Header */}
-              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20">
+              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20 flex-shrink-0">
                 <div className="flex items-center">
                   <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
                     <FaFileAlt className="w-5 h-5 text-white" />
@@ -1926,7 +1926,7 @@ const confirmConsentDelete = async () => {
               </div>
 
               {/* Step tabs */}
-              <div className="flex border-b border-white/20 overflow-x-auto">
+              <div className="flex border-b border-white/20 overflow-x-auto flex-shrink-0">
                 {['Personal', 'Address', 'Education', 'Employment', 'References', 'Other', 'Decision'].map((label, idx) => (
                   <button
                     key={label}
@@ -1943,7 +1943,7 @@ const confirmConsentDelete = async () => {
               </div>
 
               {/* Step content */}
-              <div className="px-4 sm:px-6 py-5 max-h-[60vh] overflow-y-auto">
+              <div className="px-4 sm:px-6 py-5 overflow-y-auto flex-1">
 
                 {consentViewStep === 1 && (
                   <div className="space-y-3">
@@ -2132,7 +2132,7 @@ const confirmConsentDelete = async () => {
               </div>
 
               {/* Footer */}
-              <div className="flex items-center justify-between px-4 sm:px-6 py-4 bg-white/5 rounded-b-2xl border-t border-white/20">
+              <div className="flex items-center justify-between px-4 sm:px-6 py-4 bg-white/5 rounded-b-2xl border-t border-white/20 flex-shrink-0">
                 <div className="flex gap-2">
                   <button
                     onClick={() => setConsentViewStep(s => Math.max(1, s - 1))}
