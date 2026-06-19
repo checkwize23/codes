@@ -1163,18 +1163,15 @@ const ServiceRequestForm = () => {
         {/* Extra fields for single services */}
         {serviceKey !== 'all-services' && current.extraFields && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            {current.extraFields.map((f) => (
-              <div key={f.key}>
-                <label className="block text-sm font-medium text-gray-300 mb-2">{f.label}</label>
-                <input
-                  type={f.type || 'text'}
-                  min={f.min}
-                  max={f.max}
-                  value={formState[f.key] ?? ''}
-                  onChange={(e) => setFormState((prev) => ({ ...prev, [f.key]: e.target.value }))}
-                  className="mt-1 block w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                />
-              </div>
+            {current.extraFields
+              .filter((f) => f.type !== 'hidden')
+              .map((f) => (
+                <div key={f.key}>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">{f.label}</label>
+                  <input type={f.type || 'text'} min={f.min} max={f.max}
+                    value={formState[f.key] ?? ''} onChange={(e) => setFormState((prev) => ({ ...prev, [f.key]: e.target.value }))}
+                    className="mt-1 block w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"/>
+                </div>
             ))}
           </div>
         )}
