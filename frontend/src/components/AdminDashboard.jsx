@@ -1723,8 +1723,8 @@ const confirmConsentDelete = async () => {
         {/* Consent View Modal */}
         {showConsentView && selectedConsent && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full z-[9999] flex items-center justify-center modal-backdrop">
-            <div className="relative mx-auto p-3 sm:p-0 w-full sm:w-full max-w-2xl">
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20">
+            <div className="relative mx-auto p-3 sm:p-0 w-full sm:w-full max-w-2xl my-8">
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all max-h-[85vh] overflow-y-auto">
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20">
                   <div className="flex items-center">
@@ -1900,8 +1900,8 @@ const confirmConsentDelete = async () => {
         {/* Contact View Modal */}
         {showContactView && selectedContact && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full z-[9999] flex items-center justify-center modal-backdrop">
-            <div className="relative mx-auto p-3 sm:p-0 w-full sm:w-4/5 max-w-4xl">
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all">
+            <div className="relative mx-auto p-3 sm:p-0 w-full sm:w-4/5 max-w-4xl my-8">
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all max-h-[85vh] overflow-y-auto">
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20">
                   <div className="flex items-center">
