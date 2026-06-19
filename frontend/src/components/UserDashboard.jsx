@@ -829,8 +829,8 @@ const UserDashboard = () => {
       {/* Profile Edit Modal */}
       {showProfileEdit && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full z-[9999] flex items-center justify-center modal-backdrop">
-          <div className="relative mx-auto p-4 w-full max-w-md">
-            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all">
+          <div className="relative mx-auto p-4 w-full max-w-md my-8">
+            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all max-h-[85vh] overflow-y-auto">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-white/20">
                 <div className="flex items-center">
@@ -911,8 +911,8 @@ const UserDashboard = () => {
       {/* Password Change Modal */}
       {showPasswordChange && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full z-[9999] flex items-center justify-center modal-backdrop">
-          <div className="relative mx-auto p-4 w-full max-w-md">
-            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all">
+          <div className="relative mx-auto p-4 w-full max-w-md my-8">
+            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all max-h-[85vh] overflow-y-auto">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-white/20">
                 <div className="flex items-center">
@@ -993,8 +993,8 @@ const UserDashboard = () => {
       {/* Application View Modal */}
       {showApplicationView && selectedApplication && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full z-[9999] flex items-center justify-center modal-backdrop">
-          <div className="relative mx-auto p-4 w-full max-w-[95vw] sm:max-w-2xl">
-            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all">
+          <div className="relative mx-auto p-4 w-full max-w-[95vw] sm:max-w-2xl my-8">
+            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all max-h-[85vh] overflow-y-auto">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-white/20">
                 <div className="flex items-center">

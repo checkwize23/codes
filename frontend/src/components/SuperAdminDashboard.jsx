@@ -2174,9 +2174,9 @@ const confirmConsentDelete = async () => {
       {/* Consent Delete Confirmation Modal */}
       {showConsentDeleteConfirm && consentDeleteTarget.id && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full z-[9999] flex items-center justify-center">
-          <div className="relative mx-auto p-3 sm:p-0 w-full max-w-md">
-            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20">
-              <div className="flex items-center justify-between p-6 border-b border-white/20">
+          <div className="relative mx-auto p-3 sm:p-0 w-full max-w-md my-8">
+            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 max-h-[85vh] overflow-y-auto">
+              <div className="flex items-center justify-between p-6 border-b border-white/20 transform transition-all max-h-[85h] overflow-y-auto">
                 <div className="flex items-center">
                   <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center">
                     <FaTrash className="w-5 h-5 text-white" />
@@ -2211,8 +2211,8 @@ const confirmConsentDelete = async () => {
       {/* Create Admin Modal */}
       {showCreateAdmin && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full z-[9999] flex items-center justify-center modal-backdrop">
-          <div className="relative mx-auto p-3 sm:p-0 w-full sm:w-full max-w-md">
-            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all">
+          <div className="relative mx-auto p-3 sm:p-0 w-full sm:w-full max-w-md my-8">
+            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all max-h-[85vh] overflow-y-auto">
               {/* Header */}
               <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20">
                 <div className="flex items-center">
@@ -2405,8 +2405,8 @@ const confirmConsentDelete = async () => {
       {/* User/Admin View Modal */}
       {showUserView && selectedUserRow && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full z-[9999] flex items-center justify-center modal-backdrop">
-          <div className="relative mx-auto p-3 sm:p-0 w-full sm:w-full max-w-md">
-            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all">
+          <div className="relative mx-auto p-3 sm:p-0 w-full sm:w-full max-w-md my-8">
+            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all max-h-[85vh] overflow-y-auto">
               <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20">
                 <div className="flex items-center">
                   <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
@@ -2454,8 +2454,8 @@ const confirmConsentDelete = async () => {
        {/* Contact View Modal */}
        {showContactView && selectedContact && (
          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full z-[9999] flex items-center justify-center modal-backdrop">
-           <div className="relative mx-auto p-3 sm:p-0 w-full sm:w-4/5 max-w-4xl">
-             <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all">
+           <div className="relative mx-auto p-3 sm:p-0 w-full sm:w-4/5 max-w-4xl my-8">
+             <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all max-h-[85vh] overflow-y-auto">
                {/* Header */}
                <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20">
                  <div className="flex items-center">
@@ -2689,8 +2689,8 @@ const confirmConsentDelete = async () => {
        {/* Delete Confirmation Modal */}
        {showDeleteConfirm && deleteTarget && (
          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full z-[9999] flex items-center justify-center modal-backdrop">
-           <div className="relative mx-auto p-3 sm:p-0 w-full max-w-md">
-             <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all">
+           <div className="relative mx-auto p-3 sm:p-0 w-full max-w-md my-8">
+             <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all max-h-[85vh] overflow-y-auto">
                {/* Header */}
                <div className="flex items-center justify-between p-6 border-b border-white/20">
                  <div className="flex items-center">
@@ -2791,8 +2791,8 @@ const confirmConsentDelete = async () => {
        {/* Contact Delete Confirmation Modal */}
        {showContactDeleteConfirm && contactDeleteTarget.id && (
          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full z-[9999] flex items-center justify-center modal-backdrop">
-           <div className="relative mx-auto p-3 sm:p-0 w-full max-w-md">
-             <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all">
+           <div className="relative mx-auto p-3 sm:p-0 w-full max-w-md my-8">
+             <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 transform transition-all max-h-[85vh] overflow-y-auto">
                {/* Header */}
                <div className="flex items-center justify-between p-6 border-b border-white/20">
                  <div className="flex items-center">

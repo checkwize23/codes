@@ -1020,7 +1020,7 @@ const ServiceRequestForm = () => {
                   onChange={(val) => handleDocumentChange(doc.key, val)}/>
                   {doc.key === 'geotaggedPhoto' && (
                     <p className= "text-xs text-amber-300/90 mt-2">
-                      Please take this photo with geotag/location enabled, and make sure the house your're currently living in(mentioned in the aadhaar) is visible in the same photo.
+                      Please take this photo with geotag location enabled, and make sure the house your're currently living in is visible in the same photo.
                     </p>
                   )}
               </div>    
