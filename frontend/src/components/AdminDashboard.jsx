@@ -1213,7 +1213,7 @@ const confirmConsentDelete = async () => {
                       if (appUpdate.resultPdf) {
                         const formData = new FormData();
                         formData.append('file', appUpdate.resultPdf);
-                        formData.append('upload_preset', 'checkwize_documents'); 
+                        formData.append('upload_preset', 'checkwize-documents'); 
                         formData.append('resource_type', 'raw');
                         const res = await fetch('https://api.cloudinary.com/v1_1/drvodxyko/raw/upload', { 
                           method: 'POST',

@@ -1011,13 +1011,19 @@ const ServiceRequestForm = () => {
         {serviceKey !== 'all-services' && current.documents && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {current.documents.map((doc) => (
-              <FileInput
-                key={doc.key}
-                id={`${serviceKey}-${doc.key}`}
-                label={doc.label}
-                multiple={doc.multiple}
-                onChange={(val) => handleDocumentChange(doc.key, val)}
-              />
+              <div key={doc.key}>
+                <FileInput
+                  key={doc.key}
+                  id={`${serviceKey}-${doc.key}`}
+                  label={doc.label}
+                  multiple={doc.multiple}
+                  onChange={(val) => handleDocumentChange(doc.key, val)}/>
+                  {doc.key === 'geotaggedPhoto' && (
+                    <p className= "text-xs text-amber-300/90 mt-2">
+                      Please take this photo with geotag/location enabled, and make sure the house your're currently living in(mentioned in the aadhaar) is visible in the same photo.
+                    </p>
+                  )}
+              </div>    
             ))}
           </div>
         )}
@@ -1120,7 +1126,9 @@ const ServiceRequestForm = () => {
 
 {serviceKey === "address" && (
 <div className="space-y-4">
-
+  <p className='text-xs text-amber-300/90'>
+    When you tap "share Current Address, "make sure you are physically present at the address listed on your Aadhaar card.
+  </p>
   <button type="button" onClick={async () => {
   try {
   const location = await getCurrentAddress()
@@ -1141,7 +1149,12 @@ const ServiceRequestForm = () => {
   </button>
   
   {formState.detectedAddress && (
-  <textarea readOnly value={formState.detectedAddress} className="w-full rounded-lg p-3 bg-gray-800 text-white" />
+  <div>
+    <label className="block text-sm font-medium text-gray-300 mb-2">Detected Address</label>
+    <textarea readOnly value={formState.detectedAddress}
+      className="w-full rounded-lg p-3 bg-gray-800 text-white cursor-not-allowed opacity-90"/>
+    <p className="text-xs text-gray-400 mt-1">This address was automatically detected and cannot be edited.</p>
+  </div>
   )}
   
 </div>
