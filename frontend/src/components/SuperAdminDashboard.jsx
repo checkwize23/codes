@@ -3,6 +3,8 @@ import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { db } from '../firebase';
 import { collection, getDocs, doc, deleteDoc, query, orderBy, updateDoc } from 'firebase/firestore';
+import NotificationBell from './NotificationBell';
+import SendNotificationPanel from './SendNotificationPanel';
 import toast from 'react-hot-toast';
 import { 
   FaUser, 
@@ -563,6 +565,7 @@ const confirmConsentDelete = async () => {
               <h1 className="text-2xl sm:text-3xl font-bold text-white drop-shadow-lg text-left pt-4">{t('superAdminDashboard')}</h1>
               <p className="text-indigo-100 mt-1 drop-shadow-md italic text-left text-sm sm:text-base">{t('welcomeBack')}, {user?.firstName} {user?.lastName}</p>
             </div>
+            <NotificationBell recipientId={user?._id || user?.id} />
           </div>
         </div>
       </div>
@@ -727,6 +730,8 @@ const confirmConsentDelete = async () => {
                 </div>
               )}
             </div>
+            <SendNotificationPanel senderName={`${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'Super Admin'}
+              senderRole="super_admin" allowedRoles={['user','admin']}/>
           </div>
         )}
 

@@ -4,7 +4,8 @@ import { useLanguage } from "../context/LanguageContext";
 import { db } from "../firebase";
 import { collection, getDocs, doc, deleteDoc, updateDoc, orderBy, query } from "firebase/firestore";
 import toast from "react-hot-toast";
-
+import NotificationBell from "./NotificationBell";
+import SendNotificationPanel from "./SendNotificationPanel";
 import CandidateDeclarationForm from "../pages/CandidateDeclarationForm";
 import { 
   FaUser, 
@@ -448,6 +449,7 @@ const confirmConsentDelete = async () => {
                 {t("welcomeBack")}, {user?.firstName} {user?.lastName}
               </p>
             </div>
+            <NotificationBell recipientId={user?._id || user?.id}/>
           </div>
         </div>
       </div>
@@ -637,6 +639,8 @@ const confirmConsentDelete = async () => {
                 <FaFileAlt className="inline mr-2" /> View Consent Forms
               </button>
             </div>
+            <SendNotificationPanel senderName={`${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'Admin'}
+              senderRole="admin" allowedRoles={['user']}/>
           </div>
         )}
 
