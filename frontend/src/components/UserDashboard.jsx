@@ -10,7 +10,7 @@ import LoadingOverlay from './LoadingOverlay';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import NotificationBell from './NotificationBell';
-import { subscribeToNotifications } from '../../utils/notifications';
+import { subscribeToNotifications } from '../notifications';
 import { 
   FaUser, 
   FaBolt, 

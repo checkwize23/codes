@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaBell, FaTimes } from 'react-icons/fa';
-import { subscribeToNotifications, markAsRead } from '../../utils/notifications';
+import { subscribeToNotifications, markAsRead } from '../notifications';
 
 const NotificationBell = ({ recipientId }) => {
   const [notifications, setNotifications] = useState([]);

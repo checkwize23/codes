@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaBell, FaSearch, FaPaperPlane } from 'react-icons/fa';
-import { sendNotification } from '../../utils/notifications';
+import { sendNotification } from '../notifications';
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import toast from 'react-hot-toast';
