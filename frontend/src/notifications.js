@@ -1,4 +1,4 @@
-import { db } from '../firebase';
+import { db } from './firebase';
 import { collection, addDoc, serverTimestamp, query, where, onSnapshot, updateDoc, doc } from 'firebase/firestore';
 
 export const sendNotification = async ({ recipientId, recipientEmail, recipientRole, title, message, sentBy, sentByRole }) => {
