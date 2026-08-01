@@ -367,7 +367,7 @@ const UserDashboard = () => {
                 {t('welcomeBack')}, {user?.firstName} {user?.lastName}
               </p>
             </div>
-            <NotficationBell recipientId={user?._id || user?.id} />
+            <NotificationBell recipientId={user?._id || user?.id} />
           </div>
         </div>
       </div>
