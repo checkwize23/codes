@@ -5,6 +5,9 @@ import { db } from '../firebase';
 import { collection, getDocs, doc, deleteDoc, query, orderBy, updateDoc } from 'firebase/firestore';
 import NotificationBell from './NotificationBell';
 import SendNotificationPanel from './SendNotificationPanel';
+import HelpCenter from './Helpcenter';
+import MyTickets from './Mytickets';
+import SupportTicketsPanel from './Supportticketspanel';
 import toast from 'react-hot-toast';
 import { 
   FaUser, 
@@ -145,6 +148,7 @@ const [consentDeleteTarget, setConsentDeleteTarget] = useState({ id: '', name: '
   const [appStatusFilter, setAppStatusFilter] = useState('All');
   const [appTypeFilter, setAppTypeFilter] = useState('All');
   const [showAppUser, setShowAppUser] = useState(false);
+  const [contactSubTab, setContactSubTab] = useState ('contacts');
 
   useEffect(() => {
     loadUsers();
@@ -580,7 +584,8 @@ const confirmConsentDelete = async () => {
               { id: 'admins', name: t('adminManagement') || 'Admin Management', count: newContactsCount, icon: '' },
               { id: 'applications', name: t('applicationManagement') || 'Application Management', count: newApplicationsCount, icon: '' },
               { id: 'contacts', name: t('contactManagement'), count: newContactsCount, icon: '' },
-              { id: 'consents', name: 'Consent Forms', count: consentForms.filter(c => !viewedConsents.has(c.id)).length, icon:''}
+              { id: 'consents', name: 'Consent Forms', count: consentForms.filter(c => !viewedConsents.has(c.id)).length, icon:''},
+              { id: 'tickets', name:'My Tickets', icon: ''},
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -1547,216 +1552,281 @@ const confirmConsentDelete = async () => {
 
 
         {activeTab === 'contacts' && (
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20">
-            <div className="px-6 py-4 border-b border-white/20">
-              <h3 className="text-lg font-semibold text-white">Contact Management</h3>
-              <p className="text-sm text-gray-300 mt-1">Managing {filteredContacts.length} contact submissions</p>
+          <div className="space-y-4">
+
+            {/* Sub-tab switcher */}
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-1 border border-white/10 flex gap-1">
+              {[
+                { id: 'contacts', label: 'Contact Management' },
+                { id: 'tickets', label: 'Support Tickets' },
+              ].map((sub) => (
+                <button
+                  key={sub.id} onClick={() => setContactSubTab(sub.id)}
+                  className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    contactSubTab === sub.id
+                      ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
+                      : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  {sub.label}
+                </button>
+              ))}
             </div>
-            
-            {/* Search Bar */}
-            <div className="px-6 py-4 border-b border-white/20">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                <div className="w-full md:w-[80%]">
-                  <label htmlFor="contactSearch" className="sr-only">Search contacts</label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaSearch className="h-4 w-4 md:h-5 md:w-5 text-gray-400" />
-                    </div>
-                    <input
-                      id="contactSearch"
-                      type="text"
-                      placeholder="Search by name, email, or message..."
-                      value={contactSearchTerm}
-                      onChange={(e) => setContactSearchTerm(e.target.value)}
-                      className="block w-full pl-9 pr-3 py-1.5 md:py-2 border border-white/20 rounded-lg leading-5 bg-white/10 backdrop-blur-sm text-white placeholder-gray-400 focus:outline-none focus:placeholder-gray-300 focus:ring-1 focus:ring-cyan-600 focus:border-cyan-700 text-xs md:text-sm"
-                    />
-                  </div>
+
+            {/* ========================================================= */}
+            {/* CONTACT MANAGEMENT SUB-TAB */}
+            {/* ========================================================= */}
+
+            {contactSubTab === 'contacts' && (
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20">
+                <div className="px-6 py-4 border-b border-white/20">
+                  <h3 className="text-lg font-semibold text-white">
+                    Contact Management
+                  </h3>
+                  <p className="text-sm text-gray-300 mt-1">
+                    Managing {filteredContacts.length} contact submissions
+                  </p>
                 </div>
-                
-                {/* Contacts per page selector */}
-                <div className="flex items-center space-x-2 md:self-auto">
-                  <label htmlFor="contactsPerPage" className="text-xs md:text-sm font-medium text-gray-300">
-                    Show:
-                  </label>
-                  <div className="relative">
-                    <select
-                      id="contactsPerPage"
-                      value={contactsPerPage}
+
+                {/* Search Bar */}
+                <div className="px-6 py-4 border-b border-white/20">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                    <div className="w-full md:w-[80%]">
+                      <label htmlFor="contactSearch" className="sr-only">
+                        Search contacts
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <FaSearch className="h-4 w-4 md:h-5 md:w-5 text-gray-400" />
+                        </div>
+                        <input id="contactSearch" type="text"
+                          placeholder="Search by name, email, phone, or message..."
+                          value={contactSearchTerm}
+                          onChange={(e) => setContactSearchTerm(e.target.value)}
+                          className="block w-full pl-9 pr-3 py-1.5 md:py-2 border border-white/20 rounded-lg leading-5 bg-white/10 backdrop-blur-sm text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-xs md:text-sm"
+                        />
+                    </div>
+                  </div>
+
+                  {/* Contacts per page */}
+                  <div className="flex items-center gap-2">
+                    <label htmlFor="contactsPerPage" className="text-xs md:text-sm text-gray-300">
+                      Show
+                    </label>
+                    <select id="contactsPerPage" value={contactsPerPage}
                       onChange={(e) => setContactsPerPage(Number(e.target.value))}
-                      className="block w-20 pr-7 pl-3 py-1.5 md:py-2 border border-white/20 rounded-lg leading-5 bg-cyan-700 backdrop-blur-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan-600 focus:border-cyan-700 text-xs md:text-sm appearance-none"
+                      className="px-2 py-1.5 md:py-2 border border-white/20 rounded-lg bg-white/10 text-white text-xs md:text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
                     >
                       <option value={5}>5</option>
                       <option value={10}>10</option>
                       <option value={15}>15</option>
                       <option value={20}>20</option>
                     </select>
-                    <FaChevronDown className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 md:h-4 md:w-4 text-gray-300" />
+                    <span className="text-xs md:text-sm text-gray-300">
+                      per page
+                    </span>
                   </div>
-                  <span className="text-xs md:text-sm text-gray-300">per page</span>
                 </div>
               </div>
-            </div>
 
-            {filteredContacts.length === 0 ? (
-              <div className="p-6 text-center">
-                <p className="text-gray-300">No contact submissions found.</p>
-              </div>
-            ) : (
-              <>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-white/20">
-                    <thead className="bg-white/10">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Contact</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Company Info</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Message</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">User Info</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Submitted</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-transparent divide-y divide-white/20">
-                      {currentContacts.map((contact) => (
-                        <tr key={contact.id}>
-                                                     <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="flex-shrink-0 w-10 h-10">
-                                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-semibold">
-                                  {contact.name?.charAt(0)}
-                                </div>
-                              </div>
-                              <div className="ml-4">
-                                <div className="text-sm font-medium text-white flex items-center">
-                                  {contact.name}
-                                  {!viewedContacts.has(contact.id) && (
-                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-500 text-white">
-                                      NEW
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="text-sm text-gray-300">{contact.email}</div>
-                                {contact.phone && (
-                                  <div className="text-sm text-gray-300">{contact.phone}</div>
+              {/* Contacts Table */}
+              {loading ? (
+                <div className="p-6 text-center">
+                  <img src="./checkwize_logo.png" alt="Loading" className="w-10 h-10 mx-auto"/>
+                </div>
+              ) : filteredContacts.length === 0 ? (
+                <div className="p-6 text-center">
+                  <p className="text-gray-300">
+                    No contact submissions found.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-white/20">
+                      <thead className="bg-white/10">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            Name
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            Email
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            Role
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            Submitted
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-transparent divide-y divide-white/20">
+                        
+                        {filteredContacts
+                          .slice(indexOfFirstContact, indexOfLastContact)
+                          .map((contact) => (
+
+                            <tr key={contact.id}>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                                {contact.name || '—'}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                                {contact.email || '—'}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                {contact.userRole && (
+                                  <span
+                                    className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                      contact.userRole === 'super_admin'
+                                        ? 'bg-purple-500/20 text-purple-300'
+                                        : contact.userRole === 'admin'
+                                        ? 'bg-blue-500/20 text-blue-300'
+                                        : 'bg-green-500/20 text-green-300'
+                                    }`}
+                                  >
+                                    {contact.userRole.replace('_', ' ')}
+                                  </span>
                                 )}
-                              </div>
-                            </div>
-                          </td>
-                           <td className="px-6 py-4">
-                             {contact.companyInfo && (
-                               <div className="text-sm text-white">
-                                 {contact.companyInfo.companyName && (
-                                   <div className="font-medium">{contact.companyInfo.companyName}</div>
-                                 )}
-                                 {contact.companyInfo.companyPhone && (
-                                   <div className="text-gray-300">{contact.companyInfo.companyPhone}</div>
-                                 )}
-                                 {contact.companyInfo.companyEmail && (
-                                   <div className="text-gray-300">{contact.companyInfo.companyEmail}</div>
-                                 )}
-                                 {contact.companyInfo.companyAddress && (
-                                   <div className="text-gray-300 max-w-xs truncate" title={contact.companyInfo.companyAddress}>
-                                     {contact.companyInfo.companyAddress}
-                                   </div>
-                                 )}
-                                 {!contact.companyInfo.companyName && !contact.companyInfo.companyPhone && !contact.companyInfo.companyEmail && !contact.companyInfo.companyAddress && (
-                                   <span className="text-gray-400 italic">No company info</span>
-                                 )}
-                               </div>
-                             )}
-                           </td>
-                           <td className="px-6 py-4">
-                             <div className="text-sm text-white max-w-xs truncate" title={contact.message}>
-                               {contact.message}
-                             </div>
-                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-300">
-                              {contact.userRole === 'guest' ? (
-                                <span className="px-2 py-1 bg-white/10 text-white rounded-full text-xs backdrop-blur-sm">
-                                  Guest User
-                                </span>
-                              ) : (
-                                <span className={`px-2 py-1 rounded-full text-xs ${
-                                  contact.userRole === 'super_admin' ? 'bg-purple-500/20 text-purple-300' :
-                                  contact.userRole === 'admin' ? 'bg-blue-500/20 text-blue-300' :
-                                  'bg-green-500/20 text-green-300'
-                                }`}>
-                                  {contact.userRole?.replace('_', ' ')}
-                                </span>
-                              )}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                             {formatDate(contact.submittedAt)}
-                           </td>
-                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                             <div className="flex space-x-2">
-                               <button
-                                 onClick={() => handleViewContact(contact)}
-                                 className="text-indigo-400 hover:text-indigo-300 p-2 rounded-full hover:bg-white/10 transition-colors duration-200"
-                                 title="View Details"
-                               >
-                                 <FaEye className="w-5 h-5" />
-                               </button>
-                                                             <button
-                                onClick={() => handleDeleteContact(contact.id, contact.name)}
-                                className="text-red-400 hover:text-red-300 p-2 rounded-full hover:bg-white/10 transition-colors duration-200"
-                                title="Delete Contact"
-                              >
-                                 <FaTrash className="w-5 h-5" />
-                               </button>
-                             </div>
-                           </td>
-                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                                {formatDate(contact.submittedAt)}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div className="flex space-x-2">
+                                  <button onClick={() => handleViewContact(contact)}
+                                    className="text-indigo-400 hover:text-indigo-300 p-2 rounded-full hover:bg-white/10 transition-colors duration-200"
+                                    title="View Details">
+                                    <FaEye className="w-5 h-5" />
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      handleDeleteContact(
+                                        contact.id,
+                                        contact.name
+                                      )
+                                    }
+                                    className="text-red-400 hover:text-red-300 p-2 rounded-full hover:bg-white/10 transition-colors duration-200"
+                                    title="Delete Contact"
+                                  >
+                                    <FaTrash className="w-5 h-5" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
 
-                {/* Pagination */}
-                {totalContactPages > 1 && (
-                  <div className="px-6 py-4 border-t border-gray-200">
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm text-gray-700">
-                        Showing {indexOfFirstContact + 1} to {Math.min(indexOfLastContact, filteredContacts.length)} of {filteredContacts.length} results
-                      </div>
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => setContactCurrentPage(contactCurrentPage - 1)}
-                          disabled={contactCurrentPage === 1}
-                          className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          Previous
-                        </button>
-                        {Array.from({ length: totalContactPages }, (_, i) => i + 1).map((page) => (
+                  {/* Pagination */}
+                  {totalContactPages > 1 && (
+                    <div className="px-6 py-4 border-t border-white/20">
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm text-gray-300">
+                          Showing {indexOfFirstContact + 1} to{' '}
+                          {Math.min(
+                            indexOfLastContact,
+                            filteredContacts.length
+                          )}{' '}
+                          of {filteredContacts.length}
+                        </div>
+                        <div className="flex items-center space-x-2">
                           <button
-                            key={page}
-                            onClick={() => setContactCurrentPage(page)}
-                            className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
-                              contactCurrentPage === page
-                                ? 'bg-indigo-600 text-white shadow-lg'
-                                : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
-                            }`}
+                            onClick={() =>
+                              setContactCurrentPage(
+                                contactCurrentPage - 1
+                              )
+                            }
+                            disabled={contactCurrentPage === 1}
+                            className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            {page}
+                            Previous
                           </button>
-                        ))}
-                        <button
-                          onClick={() => setContactCurrentPage(contactCurrentPage + 1)}
-                          disabled={contactCurrentPage === totalContactPages}
-                          className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          Next
-                        </button>
+
+                          {Array.from(
+                            { length: totalContactPages },
+                            (_, i) => i + 1
+                          ).map((page) => (
+
+                            <button
+                              key={page}
+                              onClick={() =>
+                                setContactCurrentPage(page)
+                              }
+                              className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                                contactCurrentPage === page
+                                  ? 'bg-indigo-600 text-white shadow-lg'
+                                  : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
+                              }`}
+                            >
+                              {page}
+                            </button>
+                          ))}
+                          <button
+                            onClick={() =>
+                              setContactCurrentPage(
+                                contactCurrentPage + 1
+                              )
+                            }
+                            disabled={
+                              contactCurrentPage === totalContactPages
+                            }
+                            className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            Next
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        )}
+                  )}
+                </>
+              )}
+            </div>
+          )}
+          {/* ========================================================= */}
+          {/* SUPPORT TICKETS SUB-TAB */}
+          {/* ========================================================= */}
+
+          {contactSubTab === 'tickets' && (
+            <div className="space-y-6">
+              {/* User Support Tickets */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-4 sm:p-6">
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-white">
+                    User Support Tickets
+                  </h3>
+                  <p className="text-sm text-gray-300 mt-1">
+                    Support requests from normal users
+                  </p>
+                </div>
+                <SupportTicketsPanel ticketType="user" />
+              </div>
+              {/* Admin Support Tickets */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-4 sm:p-6">
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-white">
+                    Admin Support Tickets
+                  </h3>
+                  <p className="text-sm text-gray-300 mt-1">
+                    Support requests from admin users
+                  </p>
+                </div>
+                <SupportTicketsPanel ticketType="admin" />
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+
+      { activeTab === 'tickets' && (
+      <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-4 sm:p-6">
+        <MyTickets />
       </div>
+      )}  
       
       {activeTab === 'consents' && (
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20">
@@ -2870,7 +2940,8 @@ const confirmConsentDelete = async () => {
            </div>
          </div>
       )}
-
+      <HelpCenter />
+    </div>
     </div>
   );
 };

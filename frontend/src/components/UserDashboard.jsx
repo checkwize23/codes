@@ -10,6 +10,8 @@ import LoadingOverlay from './LoadingOverlay';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import NotificationBell from './NotificationBell';
+import HelpCenter from './Helpcenter';
+import MyTickets from './Mytickets';
 import { subscribeToNotifications } from '../notifications';
 import { 
   FaUser, 
@@ -380,6 +382,7 @@ const UserDashboard = () => {
               { id: 'overview', name: t('overview'), icon: '' },
               { id: 'services', name: t('verificationServices'), icon: '' },
               { id: 'applications', name: t('myApplications') || 'My Applications', icon: '' },
+              { id: 'tickets', name: 'My Tickets', icon: ''},
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -769,6 +772,12 @@ const UserDashboard = () => {
           </div>
         )}
 
+        {activeTab === 'tickets' && (
+          <div className="bg-gradient-to-br from-slate-800/90 via-slate-900/90 to-slate-800/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-4 sm:p-6">
+            <MyTickets />
+          </div>  
+        )}
+
         {activeTab === 'profile' && (
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-6">
             <div className="mb-6">
@@ -1149,6 +1158,7 @@ const UserDashboard = () => {
           </div>
         </div>
       )}
+      <HelpCenter/> 
     </div>
   );
 };

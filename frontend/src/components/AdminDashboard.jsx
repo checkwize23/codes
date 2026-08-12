@@ -6,6 +6,9 @@ import { collection, getDocs, doc, deleteDoc, updateDoc, orderBy, query } from "
 import toast from "react-hot-toast";
 import NotificationBell from "./NotificationBell";
 import SendNotificationPanel from "./SendNotificationPanel";
+import HelpCenter from "./Helpcenter";
+import MyTickets from "./Mytickets";
+import SupportTicketsPanel from "./Supportticketspanel";
 import CandidateDeclarationForm from "../pages/CandidateDeclarationForm";
 import { 
   FaUser, 
@@ -90,6 +93,7 @@ const AdminDashboard = () => {
   const [appStatusFilter, setAppStatusFilter] = useState('All');
   const [appTypeFilter, setAppTypeFilter] = useState('All');
   const [showAppUser, setShowAppUser] = useState(false);
+  const [contactSubTab, setContactSubTab] = useState('contacts');
 
   // New applications indicator
   const newApplicationsCount = applications.filter((a) => !viewedApplications.has(a.id)).length;
@@ -484,6 +488,7 @@ const confirmConsentDelete = async () => {
                 count: consentForms.filter(c => !viewedConsents.has(c.id)).length,
                 icon: "",
               },
+              { id: "tickets", name: "My Tickets", icon: ""},
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -1325,192 +1330,205 @@ const confirmConsentDelete = async () => {
         )}
 
         {activeTab === "contacts" && (
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20">
-            <div className="px-6 py-4 border-b border-white/10">
-              <h3 className="text-lg font-semibold text-white">
-                Contact Management
-              </h3>
-              <p className="text-sm text-gray-300 mt-1">
-                View contact form submissions
-              </p>
+          <div className="space-y-4">
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-1 border border-white/10 flex gap-1">
+              {[
+                { id: 'contacts', label: 'Contact Management' },
+                { id: 'tickets', label: 'Support Tickets' },
+              ].map(sub => (
+                <button key={sub.id} onClick={() => setContactSubTab(sub.id)}
+                  className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    contactSubTab === sub.id
+                      ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
+                      : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  }`}>
+                  {sub.label}
+                </button>
+              ))}
             </div>
 
-            {/* Search Bar */}
-            <div className="px-6 py-4 border-b border-white/20">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                <div className="w-full md:w-[80%]">
-                  <label htmlFor="contactSearch" className="sr-only">
-                    Search contacts
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaSearch className="h-4 w-4 md:h-5 md:w-5 text-gray-400" />
+            {contactSubTab === 'contacts' &&(
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20">
+                <div className="px-6 py-4 border-b border-white/10">
+                  <h3 className="text-lg font-semibold text-white">
+                    Contact Management
+                  </h3>
+                  <p className="text-sm text-gray-300 mt-1">
+                    View contact form submissions
+                  </p>
+                </div>
+
+                {/* Search Bar */}
+                <div className="px-6 py-4 border-b border-white/20">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                    <div className="w-full md:w-[80%]">
+                      <label htmlFor="contactSearch" className="sr-only">
+                        Search contacts
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <FaSearch className="h-4 w-4 md:h-5 md:w-5 text-gray-400" />
+                        </div>
+                        <input
+                          id="contactSearch" type="text" placeholder="Search by name, email, or message..."
+                          value={contactSearchTerm}
+                          onChange={(e) => setContactSearchTerm(e.target.value)}
+                          className="block w-full pl-9 pr-3 py-1.5 md:py-2 border border-white/20 rounded-lg leading-5 bg-white/10 backdrop-blur-sm text-white placeholder-gray-400 focus:outline-none focus:placeholder-gray-300 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-xs md:text-sm"
+                        />
+                      </div>
                     </div>
-                    <input
-                      id="contactSearch"
-                      type="text"
-                      placeholder="Search by name, email, or message..."
-                      value={contactSearchTerm}
-                      onChange={(e) => setContactSearchTerm(e.target.value)}
-                      className="block w-full pl-9 pr-3 py-1.5 md:py-2 border border-white/20 rounded-lg leading-5 bg-white/10 backdrop-blur-sm text-white placeholder-gray-400 focus:outline-none focus:placeholder-gray-300 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-xs md:text-sm"
-                    />
-                  </div>
-                </div>
-                {/* Contacts per page selector */}
-                <div className="flex items-center space-x-2 md:self-auto">
-                  <label
-                    htmlFor="contactsPerPage"
-                    className="text-xs md:text-sm font-medium text-gray-300"
-                  >
-                    Show:
-                  </label>
-                  <div className="relative">
-                    <select
-                      id="contactsPerPage"
-                      value={contactsPerPage}
-                      onChange={(e) =>
-                        setContactsPerPage(Number(e.target.value))
-                      }
-                      className="block w-20 pr-7 pl-3 py-1.5 md:py-2 border border-white/20 rounded-lg leading-5 bg-cyan-700 backdrop-blur-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan-600 focus:border-cyan-700 text-xs md:text-sm appearance-none"
-                    >
-                      <option value={5}>5</option>
-                      <option value={10}>10</option>
-                      <option value={15}>15</option>
-                      <option value={20}>20</option>
-                    </select>
-                    <FaChevronDown className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 md:h-4 md:w-4 text-gray-300" />
-                  </div>
-                  <span className="text-xs md:text-sm text-gray-300">per page</span>
-                </div>
-              </div>
-            </div>
 
-            {filteredContacts.length === 0 ? (
-              <div className="p-6 text-center">
-                <p className="text-gray-400">No contact submissions found.</p>
-              </div>
-            ) : (
-              <>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-white/20">
-                    <thead className="bg-white/10">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                          Contact
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                          Company Info
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                          Message
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                          User Info
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                          Submitted
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-transparent divide-y divide-white/20">
-                      {currentContacts.map((contact) => (
-                        <tr key={contact.id}>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="flex-shrink-0 w-10 h-10">
-                                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-semibold">
-                                  {contact.name?.charAt(0)}
+                    {/* Contacts per page selector */}
+                      <div className="flex items-center space-x-2 md:self-auto">
+                        <label htmlFor="contactsPerPage"
+                          className="text-xs md:text-sm font-medium text-gray-300"
+                        >
+                          Show:
+                        </label>
+                        <div className="relative">
+                          <select id="contactsPerPage"
+                            value={contactsPerPage} onChange={(e) =>
+                            setContactsPerPage(Number(e.target.value))
+                            }
+                            className="block w-20 pr-7 pl-3 py-1.5 md:py-2 border border-white/20 rounded-lg leading-5 bg-cyan-700 backdrop-blur-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan-600 focus:border-cyan-700 text-xs md:text-sm appearance-none"
+                          >
+                            <option value={5}>5</option>
+                            <option value={10}>10</option>
+                            <option value={15}>15</option>
+                            <option value={20}>20</option>
+                          </select>
+                          <FaChevronDown className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 md:h-4 md:w-4 text-gray-300" />
+                        </div>
+                        <span className="text-xs md:text-sm text-gray-300">per page</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {filteredContacts.length === 0 ? (
+                    <div className="p-6 text-center">
+                      <p className="text-gray-400">No contact submissions found.</p>
+                    </div>
+                    ) : (
+                    <>
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full divide-y divide-white/20">
+                        <thead className="bg-white/10">
+                          <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                              Contact
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                              Company Info
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                              Message
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                              User Info
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                              Submitted
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                              Actions
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-transparent divide-y divide-white/20">
+                          {currentContacts.map((contact) => (
+                            <tr key={contact.id}>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="flex items-center">
+                                  <div className="flex-shrink-0 w-10 h-10">
+                                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-semibold">
+                                      {contact.name?.charAt(0)}
+                                    </div>
+                                  </div>
+                                  <div className="ml-4">
+                                    <div className="text-sm font-medium text-white flex items-center">
+                                      {contact.name}
+                                      {!viewedContacts.has(contact.id) && (
+                                        <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-500 text-white">
+                                          NEW
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="text-sm text-gray-300">
+                                      {contact.email}
+                                    </div>
+                                    {contact.phone && (
+                                      <div className="text-sm text-gray-300">
+                                        {contact.phone}
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="ml-4">
-                                <div className="text-sm font-medium text-white flex items-center">
-                                  {contact.name}
-                                  {!viewedContacts.has(contact.id) && (
-                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-500 text-white">
-                                      NEW
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="text-sm text-gray-300">
-                                  {contact.email}
-                                </div>
-                                {contact.phone && (
-                                  <div className="text-sm text-gray-300">
-                                    {contact.phone}
+                              </td>
+                              <td className="px-6 py-4">
+                                {contact.companyInfo && (
+                                  <div className="text-sm text-white">
+                                    {contact.companyInfo.companyName && (
+                                      <div className="font-medium">
+                                        {contact.companyInfo.companyName}
+                                      </div>
+                                    )}
+                                    {contact.companyInfo.companyPhone && (
+                                      <div className="text-gray-300">
+                                        {contact.companyInfo.companyPhone}
+                                      </div>
+                                    )}
+                                    {contact.companyInfo.companyEmail && (
+                                      <div className="text-gray-300">
+                                        {contact.companyInfo.companyEmail}
+                                      </div>
+                                    )}
+                                    {contact.companyInfo.companyAddress && (
+                                      <div
+                                        className="text-gray-300 max-w-xs truncate"
+                                        title={contact.companyInfo.companyAddress}
+                                      >
+                                        {contact.companyInfo.companyAddress}
+                                      </div>
+                                    )}
+                                    {!contact.companyInfo.companyName &&
+                                      !contact.companyInfo.companyPhone &&
+                                      !contact.companyInfo.companyEmail &&
+                                      !contact.companyInfo.companyAddress && (
+                                        <span className="text-gray-400 italic">
+                                          No company info
+                                        </span>
+                                    )}
                                   </div>
                                 )}
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            {contact.companyInfo && (
-                              <div className="text-sm text-white">
-                                {contact.companyInfo.companyName && (
-                                  <div className="font-medium">
-                                    {contact.companyInfo.companyName}
-                                  </div>
-                                )}
-                                {contact.companyInfo.companyPhone && (
-                                  <div className="text-gray-300">
-                                    {contact.companyInfo.companyPhone}
-                                  </div>
-                                )}
-                                {contact.companyInfo.companyEmail && (
-                                  <div className="text-gray-300">
-                                    {contact.companyInfo.companyEmail}
-                                  </div>
-                                )}
-                                {contact.companyInfo.companyAddress && (
-                                  <div
-                                    className="text-gray-300 max-w-xs truncate"
-                                    title={contact.companyInfo.companyAddress}
-                                  >
-                                    {contact.companyInfo.companyAddress}
-                                  </div>
-                                )}
-                                {!contact.companyInfo.companyName &&
-                                  !contact.companyInfo.companyPhone &&
-                                  !contact.companyInfo.companyEmail &&
-                                  !contact.companyInfo.companyAddress && (
-                                    <span className="text-gray-400 italic">
-                                      No company info
-                                    </span>
-                                  )}
-                              </div>
-                            )}
-                          </td>
-                          <td className="px-6 py-4">
-                            <div
-                              className="text-sm text-white max-w-xs truncate"
-                              title={contact.message}
-                            >
-                              {contact.message}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-300">
-                              {contact.userRole === "guest" ? (
-                                <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs border border-gray-200">
-                                  Guest User
-                                </span>
-                              ) : (
-                                <span
-                                  className={`px-2 py-1 rounded-full text-xs border ${
-                                    contact.userRole === "super_admin"
-                                      ? "bg-purple-100 text-purple-800 border-purple-200"
-                                      : contact.userRole === "admin"
-                                      ? "bg-blue-100 text-blue-800 border-blue-200"
-                                      : "bg-green-100 text-green-800 border-green-200"
-                                  }`}
+                              </td>
+                              <td className="px-6 py-4">
+                                <div
+                                  className="text-sm text-white max-w-xs truncate"
+                                  title={contact.message}
                                 >
-                                  {contact.userRole?.replace("_", " ")}
-                                </span>
-                              )}
-                            </div>
-                          </td>
+                                  {contact.message}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm text-gray-300">
+                                  {contact.userRole === "guest" ? (
+                                    <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs border border-gray-200">
+                                      Guest User
+                                    </span>
+                                  ) : (
+                                  <span
+                                    className={`px-2 py-1 rounded-full text-xs border ${
+                                      contact.userRole === "super_admin"
+                                        ? "bg-purple-100 text-purple-800 border-purple-200"
+                                        : contact.userRole === "admin"
+                                        ? "bg-blue-100 text-blue-800 border-blue-200"
+                                        : "bg-green-100 text-green-800 border-green-200"
+                                      }`}>
+                                    {contact.userRole?.replace("_", " ")}
+                                  </span>
+                                  )}
+                                </div>
+                              </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                             {formatDate(contact.submittedAt)}
                           </td>
@@ -1583,6 +1601,25 @@ const confirmConsentDelete = async () => {
             )}
           </div>
         )}
+
+        {/* Support Tickets sub-tab */}
+        {contactSubTab === 'tickets' && (
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-4 sm:p-6">
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-white">User Support Tickets</h3>
+              <p className="text-sm text-gray-300 mt-1">View and respond to user support requests</p>
+            </div>
+            <SupportTicketsPanel ticketType="user" />
+          </div>
+        )}
+      </div>
+    )}
+        {activeTab === "tickets" && (
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-4 sm:p-6">
+           <MyTickets />
+          </div>
+        )}
+
         {activeTab === "consents" && (
         <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20">
           <div className="px-6 py-4 border-b border-white/10">
@@ -2521,6 +2558,7 @@ const confirmConsentDelete = async () => {
         </div>
       )}
       </div>
+      <HelpCenter />
     </div>
   );
 };
