@@ -251,17 +251,21 @@ const [consentDeleteTarget, setConsentDeleteTarget] = useState({ id: '', name: '
     try {
       // Avoid composite index by fetching all then sorting client-side
       const snap = await getDocs(collection(db, 'serviceRequests'));
-      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      items.sort((a, b) => {
-        const ad = a.createdAt?.toDate ? a.createdAt.toDate() : (a.createdAt ? new Date(a.createdAt) : 0);
-        const bd = b.createdAt?.toDate ? b.createdAt.toDate() : (b.createdAt ? new Date(b.createdAt) : 0);
-        return bd - ad;
-      });
-      setApplications(items);
-    } catch (e) {
-      console.error('Error loading applications:', e);
-      toast.error('Failed to load applications');
-    }
+      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .filter(d => {
+          const key = String(d.serviceKey || d. serviceType || '').toLowerCase();
+          return key !== 'consent' && !key.includes('consent');
+        });
+        items.sort((a, b) => {
+          const ad = a.createdAt?.toDate ? a.createdAt.toDate() : (a.createdAt ? new Date(a.createdAt) : 0);
+          const bd = b.createdAt?.toDate ? b.createdAt.toDate() : (b.createdAt ? new Date(b.createdAt) : 0);
+          return bd - ad;
+        });
+        setApplications(items);
+      } catch (e) {
+        console.error('Error loading applications:', e);
+        toast.error('Failed to load applications');
+      }
   };
 
   const loadConsentForms = async () => {
@@ -338,7 +342,10 @@ const confirmConsentDelete = async () => {
 
 
   // New applications indicator (not yet viewed)
-  const newApplicationsCount = applications.filter((a) => !viewedApplications.has(a.id)).length;
+  const newApplicationsCount = applications.filter((a) => {
+    const key = String(a.serviceKey || a.serviceType || '').toLowerCase();
+    return !viewedApplications.has(a.id) && key !== 'consent' && !key.includes('consent');
+  }).length;
 
   // Filter out current superadmin and apply search - only show regular users in User Management
   const filteredUsers = users.filter(userItem => 

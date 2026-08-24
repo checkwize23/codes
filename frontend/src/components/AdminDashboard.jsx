@@ -96,7 +96,10 @@ const AdminDashboard = () => {
   const [contactSubTab, setContactSubTab] = useState('contacts');
 
   // New applications indicator
-  const newApplicationsCount = applications.filter((a) => !viewedApplications.has(a.id)).length;
+  const newApplicationsCount = applications.filter((a) => {
+    const key = String(a.serviceKey || a.serviceType || '').toLowerCase();
+    return !viewedApplications.has(a.id) && key !== 'consent' && !key.includes('consent');
+  }).length;
 
   // Safe date formatter for Firestore Timestamps, numbers, and strings
   const formatDate = (value) => {
@@ -252,7 +255,11 @@ const AdminDashboard = () => {
     try {
       // Avoid composite index by fetching all then sorting client-side
       const snap = await getDocs(collection(db, 'serviceRequests'));
-      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .filter(d => {
+          const key = String(d.serviceKey || d.serviceType || '').toLowerCase();
+          return key !== 'consent' && !key.includes('consent');
+        });
       items.sort((a, b) => {
         const ad = a.createdAt?.toDate ? a.createdAt.toDate() : (a.createdAt ? new Date(a.createdAt) : 0);
         const bd = b.createdAt?.toDate ? b.createdAt.toDate() : (b.createdAt ? new Date(b.createdAt) : 0);
