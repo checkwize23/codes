@@ -10,6 +10,7 @@ import HelpCenter from "./Helpcenter";
 import MyTickets from "./Mytickets";
 import SupportTicketsPanel from "./Supportticketspanel";
 import CandidateDeclarationForm from "../pages/CandidateDeclarationForm";
+import CareersTab from "./CareersTab";
 import { 
   FaUser, 
   FaChartBar, 
@@ -496,6 +497,7 @@ const confirmConsentDelete = async () => {
                 icon: "",
               },
               { id: "tickets", name: "My Tickets", icon: ""},
+              { id: 'careers', name: 'Careers', icon:''},
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -1625,6 +1627,12 @@ const confirmConsentDelete = async () => {
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-4 sm:p-6">
            <MyTickets />
           </div>
+        )}
+
+        {activeTab === "careers" && (
+          <div className="bg-white/10 backdrop-blur-sm rounded-2x1 shadow-2x1 border border-white/20 p-4 sm:p-6">
+            <CareersTab />
+          </div>  
         )}
 
         {activeTab === "consents" && (

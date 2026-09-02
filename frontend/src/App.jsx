@@ -20,6 +20,7 @@ import DashboardPage from './pages/DashboardPage.jsx';
 import AdminPage from './pages/AdminPage.jsx';
 import SuperAdminPage from './pages/SuperAdminPage.jsx';
 import CandidateDeclarationForm from './pages/CandidateDeclarationForm.jsx';
+import CareersPage from './pages/CareersPage.jsx';
 const App = () => {
   useEffect(() => {
     fetch(import.meta.env.VITE_API_URL || "https://codes-4oz0.onrender.com")
@@ -42,6 +43,7 @@ const App = () => {
               <Route path="/team" element={<TeamPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/terms" element={<TermsPage />} />
+              <Route path="/careers" element={<CareersPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />

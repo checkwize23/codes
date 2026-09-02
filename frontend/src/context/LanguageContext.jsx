@@ -18,6 +18,7 @@ const translations = {
     services: 'Services',
     team: 'Team',
     contact: 'Contact',
+    careers: 'Career',
     login: 'Login',
     signup: 'Sign Up',
     dashboard: 'Dashboard',

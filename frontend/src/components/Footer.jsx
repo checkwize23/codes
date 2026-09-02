@@ -22,6 +22,7 @@ const Footer = () => {
             <li><Link to="/about" className="hover:text-white">{t('about')}</Link></li>
             <li><Link to="/privacy" className="hover:text-white">{t('privacyPolicy')}</Link></li>
             <li><Link to="/contact" className="hover:text-white">{t('contact')}</Link></li>
+            <li><Link to="/careers" className="hover:text-white">{t('careers')}</Link></li>
           </ul>
         </div>
         <div className="text-center sm:text-left">
