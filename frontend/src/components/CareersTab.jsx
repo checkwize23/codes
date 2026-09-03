@@ -99,8 +99,8 @@ const CreateJobForm = ({ onClose, onSuccess, editJob }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] overflow-y-auto flex items-start justify-center p-4">
-      <div className="w-full max-w-2xl bg-slate-800 border border-white/20 rounded-2xl shadow-2xl flex flex-col my-8 max-h-[85vh]">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+      <div className="w-full max-w-2xl bg-slate-800 border border-white/20 rounded-2xl shadow-2xl flex flex-col" style={{maxHeight: 'min(95vh, 850px)'}}>
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 flex-shrink-0">
           <h3 className="text-white font-semibold text-lg">{editJob ? 'Edit Job' : 'Post New Job'}</h3>
           <button onClick={onClose} className="text-gray-400 hover:text-white"><FaTimes className="w-5 h-5" /></button>
@@ -123,13 +123,13 @@ const CreateJobForm = ({ onClose, onSuccess, editJob }) => {
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-300 mb-1">Job Description</label>
-            <textarea value={form.description} onChange={e => set('description', e.target.value)} rows={4}
+            <textarea value={form.description} onChange={e => set('description', e.target.value)} rows={3}
               placeholder="Describe the role, responsibilities, team..."
               className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm resize-none" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-300 mb-1">Requirements (one per line)</label>
-            <textarea value={form.requirements} onChange={e => set('requirements', e.target.value)} rows={4}
+            <textarea value={form.requirements} onChange={e => set('requirements', e.target.value)} rows={3}
               placeholder={"Bachelor's degree in relevant field\n2+ years of experience\nStrong communication skills"}
               className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm resize-none" />
           </div>
@@ -373,13 +373,24 @@ const CareersTab = () => {
   };
 
   const handleDeleteJob = async (jobId) => {
-    if (!window.confirm('Delete this job listing?')) return;
+    if (!window.confirm('Delete this job listing? This will NOT delete existing applications for this job.')) return;
     try {
       await deleteDoc(doc(db, 'jobListings', jobId));
       toast.success('Job deleted');
       loadAll();
     } catch (e) {
-      toast.error('Failed to delete');
+      toast.error('Failed to delete job');
+    }
+  };
+
+  const handleDeleteApplication = async (appId, applicantName) => {
+    if (!window.confirm(`Delete the application from ${applicantName}? This permanently removes all their submitted data.`)) return;
+    try {
+      await deleteDoc(doc(db, 'jobApplications', appId));
+      toast.success('Application deleted');
+      loadAll();
+    } catch (e) {
+      toast.error('Failed to delete application');
     }
   };
 
@@ -597,10 +608,18 @@ const CareersTab = () => {
                               : <span className="text-yellow-400">Not set</span>}
                           </td>
                           <td className="px-4 py-3">
-                            <button onClick={() => setSelectedApp(app)}
-                              className="text-indigo-400 hover:text-indigo-300 p-1.5 rounded hover:bg-white/10">
-                              <FaEye className="w-4 h-4" />
-                            </button>
+                            <div className="flex items-center gap-1">
+                              <button onClick={() => setSelectedApp(app)}
+                                className="text-indigo-400 hover:text-indigo-300 p-1.5 rounded hover:bg-white/10"
+                                title="View & Update Stage">
+                                <FaEye className="w-4 h-4" />
+                              </button>
+                              <button onClick={() => handleDeleteApplication(app.id, app.applicantName)}
+                                className="text-red-400 hover:text-red-300 p-1.5 rounded hover:bg-white/10"
+                                title="Delete Application">
+                                <FaTrash className="w-4 h-4" />
+                              </button>
+                            </div>
                           </td>
                         </>
                       )}
