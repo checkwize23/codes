@@ -1,13 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
-import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 import {
   FaBriefcase, FaMapMarkerAlt, FaMoneyBillWave, FaClock,
   FaSearch, FaChevronDown, FaChevronUp, FaExternalLinkAlt,
-  FaGraduationCap, FaTools, FaListUl, FaTimes
+  FaGraduationCap, FaTools, FaListUl, FaTimes, FaFileAlt
 } from 'react-icons/fa';
+
+const STAGES = [
+  {key:'submitted', label:'Submitted', color:'bg-gray-100 text-gray-800'},
+  {key:'resume_screening', label:'Resume Screening', color:'bg-blue-100 text-blue-800'},
+  {key:'hr_interview', label:'HR Interview', color:'bg-indigo-100 text-indigo-800'},
+  {key:'telephonic_interview', label:'Telephonic Interview', color:'bg-purple-100 text-purple-800'},
+  {key:'walk_in_interview', label:'Walk-in Interview', color:'bg-yellow-100 text-yellow-800'},
+  {key:'technical_exam', label:'Technical Exam', color:'bg-orange-100 text-orange-800'},
+  {key:'technical_interview', label:'Technical Interview', color:'bg-pink-100 text-pink-800'},
+  {key:'final_discussion', label:'Final Discussion', color:'bg-teal-100 text-teal-800'},
+  {key:'selected', label:'Selected 🎉', color:'bg-green-100 text-green-800'},
+  {key:'rejected', label:'Rejected', color:'bg-red-100 text-red-800'},
+];
+
+const getStateBadge = (key) => {
+  const s= STAGES.find(s => s.key === key) || STAGES[0];
+  return <span className={`px-2 py-1 rounded-full text-xs font-medium ${s.color}`}>{s.label}</span>;
+};
+
+const isStageVisible = (app) => {
+  if (!app.revealToUserAt) return false;
+  const d = app.revealToUserAt?.toDate ? app.revealToUserAt.toDate() : new Date(app.revealToUserAt);
+  return new Date() >= d;
+};
 
 const CareersPage = () => {
   const { user } = useAuth();
@@ -18,10 +42,30 @@ const CareersPage = () => {
   const [expandedJob, setExpandedJob] = useState(null);
   const [selectedJob, setSelectedJob] = useState(null);
   const [showApplyPrompt, setShowApplyPrompt] = useState(false);
+  const [myApplications, setMyApplications] = useState([]);
+  const [showMyApps, setShowMyApps] = useState(false);
 
   useEffect(() => {
     loadJobs();
-  }, []);
+    if (user) loadMyApplications();
+  }, [user]);
+
+  const loadMyApplications = async () => {
+    try {
+      const userId = user?._id || user?.id || '';
+      const snap = await getDocs(collection(db, 'jobApplications'));
+      const mine = snap.docs .map(d => ({ id: d.id, ...d.data() }))
+        .filter (a => a.applicantId === userId);
+      mine.sort((a,b) => {
+        const ta = a.createdAt?. toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+        const tb = b.createdAt?. toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+        return tb-ta;
+      });
+      setMyApplications(mine);
+    } catch (e) {
+      console.error(e);  
+    }
+  };
 
   const loadJobs = async () => {
     try {
@@ -81,8 +125,21 @@ const CareersPage = () => {
             Join Checkwize and help companies make safer, smarter hiring decisions.
             We're looking for passionate people to grow with us.
           </p>
+
+          {user && myApplications.length > 0 && (
+            <div className="mb-6">
+              <button onClick={() => setShowMyApps(s => !s)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 border border-white/20 text-white text-sm font-medium rounded-xl hover:bg-white/20 transition-all">
+                <FaFileAlt className="w-4 h-4 text-indigo-300" />
+                  My Applications ({myApplications.length})                  
+                </button>
+            </div>    
+          )}
+
           <div className="relative max-w-xl mx-auto">
-            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none z-10">
+              <FaSearch className="text-gray-400 w-4 h-4" />
+            </div>
             <input
               type="text"
               placeholder="Search by role, location..."
@@ -93,6 +150,52 @@ const CareersPage = () => {
           </div>
         </div>
       </div>
+      
+      {/* My Applications Panel */}
+      {showMyApps && user && (
+        <div className="max-w-4xl mx-auto px-4 mb-8">
+          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4 sm:p-6">
+            <h3 className="text-white font-semibold text-lg mb-4">My Applications</h3>
+            {myApplications.length === 0 ? (
+              <p className="text-gray-400 text-sm">You haven't applied to any jobs yet.</p>
+            ) : (
+              <div className="space-y-3">
+                {myApplications.map(app => {
+                  const visible = isStageVisible(app);
+                  const revealDate = app.revealToUserAt?.toDate
+                    ? app.revealToUserAt.toDate()
+                    : app.revealToUserAt ? new Date(app.revealToUserAt) : null;
+                  return (
+                    <div key={app.id} className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <div>
+                        <p className="text-white font-medium">{app.jobTitle}</p>
+                        <p className="text-indigo-300 text-xs font-mono">{app.jobId}</p>
+                        <p className="text-gray-500 text-xs mt-1">
+                          Applied: {app.createdAt?.toDate ? app.createdAt.toDate().toLocaleDateString() : '—'}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        {visible ? (
+                          getStageBadge(app.stage)
+                        ) : (
+                          <div>
+                            <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">Update pending</span>
+                            {revealDate && (
+                              <p className="text-gray-500 text-xs mt-1">
+                                Status available on {revealDate.toLocaleDateString()}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Jobs */}
       <div className="max-w-4xl mx-auto px-4 pb-20">

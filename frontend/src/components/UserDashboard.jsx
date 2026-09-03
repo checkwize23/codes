@@ -13,7 +13,6 @@ import NotificationBell from './NotificationBell';
 import HelpCenter from './Helpcenter';
 import MyTickets from './Mytickets';
 import { subscribeToNotifications } from '../notifications';
-import CareerTab from './CareersTab';
 import { 
   FaUser, 
   FaBolt, 
@@ -384,7 +383,6 @@ const UserDashboard = () => {
               { id: 'services', name: t('verificationServices'), icon: '' },
               { id: 'applications', name: t('myApplications') || 'My Applications', icon: '' },
               { id: 'tickets', name: 'My Tickets', icon: ''},
-              { id: 'careers', name:'Career', icon:''},
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -778,12 +776,6 @@ const UserDashboard = () => {
           <div className="bg-gradient-to-br from-slate-800/90 via-slate-900/90 to-slate-800/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-4 sm:p-6">
             <MyTickets />
           </div>  
-        )}
-
-        {activeTab === 'careers' && (
-            <div className="bg-gradient-to-br from-slate-800/90 via-slate-900/90 to-slate-800/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-4 sm:p-6">
-              <CareerTab />
-            </div>
         )}
 
         {activeTab === 'profile' && (
