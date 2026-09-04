@@ -46,6 +46,7 @@ const generateJobId = () => {
 // ── SuperAdmin: Create Job Form ───────────────────────────────
 const CreateJobForm = ({ onClose, onSuccess, editJob }) => {
   const { user } = useAuth();
+  const [step, setStep] = useState(1);
   const [form, setForm] = useState({
     title: editJob?.title || '',
     description: editJob?.description || '',
@@ -98,68 +99,121 @@ const CreateJobForm = ({ onClose, onSuccess, editJob }) => {
     }
   };
 
+  const inputClass = "w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm";
+  const labelClass = "block text-sm font-medium text-gray-300 mb-1.5";
+
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl bg-slate-800 border border-white/20 rounded-2xl shadow-2xl flex flex-col" style={{maxHeight: 'min(95vh, 850px)'}}>
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 flex-shrink-0">
-          <h3 className="text-white font-semibold text-lg">{editJob ? 'Edit Job' : 'Post New Job'}</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-white"><FaTimes className="w-5 h-5" /></button>
-        </div>
-        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[
-              ['Job Title *', 'title', 'text'],
-              ['Location', 'location', 'text'],
-              ['Salary Range', 'salaryRange', 'text'],
-              ['Experience Required', 'experienceRequired', 'text'],
-            ].map(([label, key, type]) => (
-              <div key={key}>
-                <label className="block text-xs font-medium text-gray-300 mb-1">{label}</label>
-                <input type={type} value={form[key]} onChange={e => set(key, e.target.value)}
-                  placeholder={key === 'salaryRange' ? 'e.g. ₹5-8 LPA' : key === 'experienceRequired' ? 'e.g. 2-4 years' : ''}
-                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm" />
-              </div>
-            ))}
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Job Description</label>
-            <textarea value={form.description} onChange={e => set('description', e.target.value)} rows={3}
-              placeholder="Describe the role, responsibilities, team..."
-              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm resize-none" />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Requirements (one per line)</label>
-            <textarea value={form.requirements} onChange={e => set('requirements', e.target.value)} rows={3}
-              placeholder={"Bachelor's degree in relevant field\n2+ years of experience\nStrong communication skills"}
-              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm resize-none" />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Skills (comma separated)</label>
-            <input type="text" value={form.skills} onChange={e => set('skills', e.target.value)}
-              placeholder="e.g. Communication, MS Excel, Data Analysis"
-              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm" />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Google Form URL (optional)</label>
-            <input type="url" value={form.googleFormUrl} onChange={e => set('googleFormUrl', e.target.value)}
-              placeholder="https://forms.gle/..."
-              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm" />
-            <p className="text-gray-500 text-xs mt-1">Candidates will see a link to apply via Google Form as an alternative option.</p>
-          </div>
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-[#1a1f2e] border border-white/10 rounded-2xl shadow-2xl">
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <button type="button" onClick={() => set('isActive', !form.isActive)}
-              className={`w-11 h-6 rounded-full transition-colors duration-200 relative flex-shrink-0 ${form.isActive ? 'bg-indigo-600' : 'bg-gray-600'}`}>
-              <span className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${form.isActive ? 'translate-x-5' : 'translate-x-0'}`} />
-            </button>
-            <span className="text-gray-300 text-sm">{form.isActive ? 'Active (visible to all)' : 'Inactive (hidden)'}</span>
+            <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
+              <FaBriefcase className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-white font-semibold text-lg">{editJob ? 'Edit Job' : 'Post New Job'}</h3>
+              <p className="text-gray-400 text-xs">Step {step} of 2</p>
+            </div>
           </div>
-        </div>
-        <div className="flex justify-end gap-3 px-6 py-4 border-t border-white/10 flex-shrink-0">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-300 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20">Cancel</button>
-          <button onClick={handleSave} disabled={saving}
-            className="px-5 py-2 text-sm text-white bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg hover:from-indigo-600 hover:to-purple-700 disabled:opacity-50">
-            {saving ? 'Saving...' : editJob ? 'Update Job' : 'Post Job'}
+          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
+            <FaTimes className="w-5 h-5" />
           </button>
+        </div>
+
+        {/* Progress bar */}
+        <div className="h-0.5 bg-white/10">
+          <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 transition-all duration-300"
+            style={{ width: step === 1 ? '50%' : '100%' }} />
+        </div>
+
+        {/* Step 1 — Basic Info */}
+        {step === 1 && (
+          <div className="px-6 py-5 space-y-4">
+            <div>
+              <label className={labelClass}>Job Title *</label>
+              <input type="text" value={form.title} onChange={e => set('title', e.target.value)}
+                placeholder="e.g. Background Verification Analyst"
+                className={inputClass} />
+            </div>
+            <div>
+              <label className={labelClass}>Location</label>
+              <input type="text" value={form.location} onChange={e => set('location', e.target.value)}
+                placeholder="e.g. Bengaluru, Karnataka"
+                className={inputClass} />
+            </div>
+            <div>
+              <label className={labelClass}>Salary Range</label>
+              <input type="text" value={form.salaryRange} onChange={e => set('salaryRange', e.target.value)}
+                placeholder="e.g. ₹5-8 LPA"
+                className={inputClass} />
+            </div>
+            <div>
+              <label className={labelClass}>Experience Required</label>
+              <input type="text" value={form.experienceRequired} onChange={e => set('experienceRequired', e.target.value)}
+                placeholder="e.g. 2-4 years"
+                className={inputClass} />
+            </div>
+          </div>
+        )}
+
+        {/* Step 2 — Details */}
+        {step === 2 && (
+          <div className="px-6 py-5 space-y-4">
+            <div>
+              <label className={labelClass}>Job Description</label>
+              <textarea value={form.description} onChange={e => set('description', e.target.value)} rows={3}
+                placeholder="Describe the role, responsibilities, team..."
+                className={`${inputClass} resize-none`} />
+            </div>
+            <div>
+              <label className={labelClass}>Requirements <span className="text-gray-500 text-xs font-normal">(one per line)</span></label>
+              <textarea value={form.requirements} onChange={e => set('requirements', e.target.value)} rows={3}
+                placeholder={"Bachelor's degree\n2+ years experience\nStrong communication"}
+                className={`${inputClass} resize-none`} />
+            </div>
+            <div>
+              <label className={labelClass}>Skills <span className="text-gray-500 text-xs font-normal">(comma separated)</span></label>
+              <input type="text" value={form.skills} onChange={e => set('skills', e.target.value)}
+                placeholder="e.g. MS Excel, Communication, Data Analysis"
+                className={inputClass} />
+            </div>
+            <div>
+              <label className={labelClass}>Google Form URL <span className="text-gray-500 text-xs font-normal">(optional)</span></label>
+              <input type="url" value={form.googleFormUrl} onChange={e => set('googleFormUrl', e.target.value)}
+                placeholder="https://forms.gle/..."
+                className={inputClass} />
+            </div>
+            <div className="flex items-center gap-3 pt-1">
+              <button type="button" onClick={() => set('isActive', !form.isActive)}
+                className={`w-11 h-6 rounded-full transition-colors duration-200 relative flex-shrink-0 ${form.isActive ? 'bg-indigo-600' : 'bg-gray-600'}`}>
+                <span className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${form.isActive ? 'translate-x-5' : 'translate-x-0'}`} />
+              </button>
+              <span className="text-gray-300 text-sm">{form.isActive ? 'Active — visible to all' : 'Inactive — hidden'}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="flex items-center justify-between px-6 py-4 border-t border-white/10">
+          <button onClick={() => step === 1 ? onClose() : setStep(1)}
+            className="px-4 py-2 text-sm text-gray-300 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors">
+            {step === 1 ? 'Cancel' : 'Back'}
+          </button>
+          {step === 1 ? (
+            <button onClick={() => {
+              if (!form.title.trim()) { toast.error('Job title is required'); return; }
+              setStep(2);
+            }} className="px-5 py-2 text-sm text-white bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl hover:from-indigo-600 hover:to-purple-700 transition-all">
+              Next
+            </button>
+          ) : (
+            <button onClick={handleSave} disabled={saving}
+              className="px-5 py-2 text-sm text-white bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl hover:from-indigo-600 hover:to-purple-700 disabled:opacity-50 transition-all">
+              {saving ? 'Saving...' : editJob ? 'Update Job' : 'Post Job'}
+            </button>
+          )}
         </div>
       </div>
     </div>
