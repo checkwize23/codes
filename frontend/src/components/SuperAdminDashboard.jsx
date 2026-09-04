@@ -1837,7 +1837,7 @@ const confirmConsentDelete = async () => {
       </div>
       )}  
       {activeTab === 'careers' &&(
-        <div className="bg-white/10 backdrop-blur-sm rounded-2x1 shadow-2x1 border border-white/20 p-4 sm:p-6">
+        <div className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200">
           <CareersTab />
         </div>  
       )}
